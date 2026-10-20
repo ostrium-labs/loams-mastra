@@ -1,7 +1,6 @@
 name: CI
 
-# GitHub-hosted runners only. The full workflow (licences, repository checks, actionlint,
-# the `CI required` aggregator) comes with MA1 Task 3.
+# GitHub-hosted runners only (ubuntu-24.04). Every action is pinned by commit SHA.
 on:
   pull_request:
   push:
@@ -15,34 +14,10 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  dco:
-    name: DCO sign-off
-    if: github.event_name == 'pull_request'
+  checks:
+    name: Lint, typecheck, test, licences
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-      - name: Check Signed-off-by trailers
-        env:
-          BASE: ${{ github.event.pull_request.base.sha }}
-          HEAD: ${{ github.event.pull_request.head.sha }}
-        run: |
-          fail=0
-          for sha in $(git rev-list --no-merges "$BASE..$HEAD"); do
-            author=$(git log -1 --format='%an <%ae>' "$sha")
-            if ! git log -1 --format='%(trailers:key=Signed-off-by,valueonly)' "$sha" | grep -qF "$author"; then
-              echo "::error::$sha has no Signed-off-by: $author"
-              fail=1
-            fi
-          done
-          exit $fail
-
-  check:
-    name: Lint, typecheck and test
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.0
@@ -54,3 +29,38 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
+      - run: pnpm licences
+      - name: npm audit signatures
+        run: npm audit signatures
+      - name: Repository checks
+        run: node scripts/repo-checks.mjs
+
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install actionlint 1.7.12 (checksum-verified)
+        run: |
+          curl -fsSL -o actionlint.tgz https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  actionlint.tgz" | sha256sum -c -
+          tar xzf actionlint.tgz actionlint
+      - run: ./actionlint -color
+
+  required:
+    name: CI required
+    if: always()
+    needs:
+      - checks
+      - actionlint
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require all CI jobs to pass
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: |
+          if jq -e '[.[] | .result] | any(. != "success" and . != "skipped")' <<< "$NEEDS_JSON"; then
+            echo "A CI job failed or was cancelled" >&2
+            exit 1
+          fi

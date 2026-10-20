@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    # Exact versions stay exact.
+    versioning-strategy: increase
+    # Wait before proposing a release (the 2026-06 @mastra/* npm compromise).
+    cooldown:
+      default-days: 3
+      semver-major-days: 7
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: deps
+    groups:
+      mastra:
+        patterns: ["@mastra/*", "mastra"]
+    # The vendored suites are updated by scripts/vendor-upstream.mjs, never by Dependabot.
+    exclude-paths:
+      - "test/conformance/upstream/**"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 3
+    commit-message:
+      prefix: ci

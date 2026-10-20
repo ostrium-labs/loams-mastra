@@ -1,0 +1,31 @@
+name: Mastra compatibility
+description: A Mastra package or version that doesn't work against Loams.
+title: "Mastra <package> <version> fails against Loams <version>"
+labels: ["mastra-compat"]
+body:
+  - type: input
+    id: mastra
+    attributes:
+      label: Mastra packages and versions
+      placeholder: "@mastra/core 1.78.0, @mastra/qdrant 1.1.4"
+    validations:
+      required: true
+  - type: input
+    id: loams
+    attributes:
+      label: Loams version
+      placeholder: "0.1.0 (loams dev)"
+    validations:
+      required: true
+  - type: textarea
+    id: failure
+    attributes:
+      label: What fails
+      description: The failing test or call, and the exact request and response. Remove any lk_ key.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Against Loams on loopback or a tailnet only.
