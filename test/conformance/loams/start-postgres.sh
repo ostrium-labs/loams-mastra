@@ -28,6 +28,10 @@ if ! $ready; then
   [[ -n "${dir:-}" ]] && docker compose -p "${LOAMS_PG_PROJECT:-loams-mastra-conformance}" -f "$dir/compose.yaml" logs --tail 200 >&2
   exit 1
 fi
+# Mastra's pg suites assume the conventional `postgres` superuser exists (they REASSIGN OWNED
+# BY … TO postgres when they drop test roles). Loams Postgres's superuser is cloud_admin.
+PGPASSWORD="$password" psql -h "$host" -p "$port" -U "$user" -d "$db" -Atqc \
+  "DO \$\$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'postgres') THEN CREATE ROLE postgres SUPERUSER LOGIN PASSWORD 'postgres'; END IF; END \$\$"
 export_env POSTGRES_HOST "$host"
 export_env POSTGRES_PORT "$port"
 export_env POSTGRES_USER "$user"

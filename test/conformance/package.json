@@ -8,11 +8,18 @@
   "scripts": {
     "pinned:qdrant": "COMPAT_SUITE=qdrant vitest run -c suites/qdrant/vitest.config.ts",
     "pinned:qdrant-auth": "COMPAT_SUITE=qdrant-auth vitest run -c suites/qdrant/vitest.config.ts",
-    "pinned": "pnpm run pinned:qdrant"
+    "pinned": "pnpm run pinned:qdrant && pnpm run pinned:pg",
+    "pinned:pg": "COMPAT_SUITE=pg vitest run -c suites/pg/vitest.config.ts",
+    "checks:postgres": "vitest run -c checks/vitest.config.ts"
   },
   "devDependencies": {
     "@qdrant/js-client-rest": "1.19.0",
     "@types/node": "24.19.2",
     "vitest": "4.1.11"
+  },
+  "dependencies": {
+    "@mastra/core": "1.78.0",
+    "@mastra/pg": "1.31.2",
+    "pg": "8.23.1"
   }
 }
