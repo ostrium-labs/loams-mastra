@@ -1,0 +1,25 @@
+{
+  "name": "@loams-examples/quickstart-postgres",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A Mastra agent with memory and semantic recall on Loams Postgres (@mastra/pg, unchanged).",
+  "license": "Apache-2.0",
+  "scripts": {
+    "demo": "tsx src/demo.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test:e2e": "vitest run"
+  },
+  "dependencies": {
+    "@mastra/core": "1.78.0",
+    "@mastra/memory": "1.38.0",
+    "@mastra/pg": "1.31.2",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}
