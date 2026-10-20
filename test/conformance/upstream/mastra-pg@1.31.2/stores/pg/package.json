@@ -1,0 +1,59 @@
+{
+  "name": "@loams-internal/upstream-pg",
+  "version": "1.31.2",
+  "description": "Postgres provider for Mastra - includes both vector and db storage capabilities",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "async-mutex": "^0.5.0",
+    "pg": "^8.22.0",
+    "pg-connection-string": "^2.12.0",
+    "xxhash-wasm": "^1.1.0"
+  },
+  "devDependencies": {
+    "@internal/core": "workspace:@loams-internal/upstream-pg-internal-core@*",
+    "@internal/storage-test-utils": "workspace:@loams-internal/upstream-pg-test-utils@*",
+    "@mastra/core": "1.78.0",
+    "@types/node": "22.20.1",
+    "@types/pg": "^8.20.0",
+    "vitest": "4.1.11",
+    "zod": "4.6.7"
+  },
+  "peerDependencies": {
+    "@mastra/core": ">=1.76.0-0 <2.0.0-0"
+  },
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://mastra.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mastra-ai/mastra.git",
+    "directory": "stores/pg"
+  },
+  "bugs": {
+    "url": "https://github.com/mastra-ai/mastra/issues"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "private": true
+}

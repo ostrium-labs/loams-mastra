@@ -3,7 +3,10 @@ packages:
   - examples/*
   - templates/*
   - test/conformance
-  - test/conformance/upstream/*/*
+  # Vendored Mastra packages keep Mastra's layout: upstream/<pkg>@<version>/{stores,packages,workflows}/<name>
+  - test/conformance/upstream/*/stores/*
+  - test/conformance/upstream/*/packages/*
+  - test/conformance/upstream/*/workflows/*
   - test/resonate
   - scripts
 

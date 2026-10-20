@@ -1,0 +1,412 @@
+{
+  "package": "@mastra/elasticsearch",
+  "version": "1.4.4",
+  "tag": "@mastra/elasticsearch@1.4.4",
+  "repository": "https://github.com/mastra-ai/mastra",
+  "commit": "81299c921d6f499d4c62f14c38e4d4d88b4fbfae",
+  "commitDate": "2026-10-11T16:59:51Z",
+  "licence": "Apache-2.0",
+  "paths": [
+    "stores/elasticsearch/package.json",
+    "stores/elasticsearch/vitest.config.ts",
+    "stores/elasticsearch/src/**",
+    "stores/_test-utils/**"
+  ],
+  "exclusions": [
+    "**/*.perf.test.ts",
+    "**/*.stress.test.ts",
+    "**/performance-test.ts",
+    "**/*benchmark*",
+    "**/row-number-performance.test.ts",
+    "**/performance-indexes.integration.test.ts",
+    "**/node_modules/**"
+  ],
+  "droppedDependencies": [
+    "@internal/lint",
+    "@internal/types-builder",
+    "@vitest/coverage-v8",
+    "@vitest/ui",
+    "eslint",
+    "oxlint",
+    "tsdown",
+    "tsx",
+    "typescript"
+  ],
+  "packages": [
+    {
+      "dir": "stores/_test-utils",
+      "name": "@loams-internal/upstream-elasticsearch-test-utils",
+      "changes": [
+        "name @internal/storage-test-utils -> @loams-internal/upstream-elasticsearch-test-utils",
+        "scripts reduced to test: vitest run",
+        "devDependencies.@mastra/core workspace:* -> 1.78.0",
+        "devDependencies.@vitest/coverage-v8 removed (Mastra tooling)",
+        "devDependencies.@vitest/ui removed (Mastra tooling)",
+        "devDependencies.vitest catalog: -> 4.1.11",
+        "peerDependencies.vitest catalog: -> 4.1.11",
+        "devDependencies.@mastra/memory added (1.38.0): imported by the source, hoisted upstream"
+      ]
+    },
+    {
+      "dir": "stores/elasticsearch",
+      "name": "@loams-internal/upstream-elasticsearch",
+      "changes": [
+        "name @mastra/elasticsearch -> @loams-internal/upstream-elasticsearch",
+        "private",
+        "scripts reduced to test: vitest run",
+        "devDependencies.@internal/lint removed (Mastra tooling)",
+        "devDependencies.@internal/storage-test-utils -> workspace:@loams-internal/upstream-elasticsearch-test-utils@*",
+        "devDependencies.@internal/types-builder removed (Mastra tooling)",
+        "devDependencies.@mastra/core workspace:* -> 1.78.0",
+        "devDependencies.@vitest/coverage-v8 removed (Mastra tooling)",
+        "devDependencies.@vitest/ui removed (Mastra tooling)",
+        "devDependencies.eslint removed (Mastra tooling)",
+        "devDependencies.tsdown removed (Mastra tooling)",
+        "devDependencies.tsx removed (Mastra tooling)",
+        "devDependencies.typescript removed (Mastra tooling)",
+        "devDependencies.vitest catalog: -> 4.1.11",
+        "devDependencies.dotenv added (18.0.8): imported by the source, hoisted upstream"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "stores/_test-utils/CHANGELOG.md",
+      "sha256": "07a58268189c65cf675061d2229f5e99bf434f443fcac43aa8634d54f2003444"
+    },
+    {
+      "path": "stores/_test-utils/lint-staged.config.js",
+      "sha256": "574545aa4411d27ffd3fdfa06d21d62e0e7c2f6a61a533385c05d0bb7da4fae6"
+    },
+    {
+      "path": "stores/_test-utils/package.json",
+      "sha256": "b39a607b546568a2a2cb635dfa93be838c06c5591866a0083020a0ead926f318",
+      "changes": [
+        "rewritten for this workspace; see packages"
+      ]
+    },
+    {
+      "path": "stores/_test-utils/src/client-acceptance.ts",
+      "sha256": "c03b61c9736b5bc6c40dab8066b78812d040b9caa3c47505b31cef6e58111d7d"
+    },
+    {
+      "path": "stores/_test-utils/src/composite-tests.ts",
+      "sha256": "27abffab1e6338c868cdefd1e9f590562b6cb3e78f378b53a7391050edd5da69"
+    },
+    {
+      "path": "stores/_test-utils/src/config-validation.ts",
+      "sha256": "33de431e52863a8b56f07c15cfe3f0fc8f7b773c48f3e4bad8575324da99f259"
+    },
+    {
+      "path": "stores/_test-utils/src/domain-tests.ts",
+      "sha256": "a718282a16b28946cb1c2c74db7331fa4c0baa5454e64c8ee30f32751a9e3ca9"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/agents/data.ts",
+      "sha256": "b0734be3a352b8a0205097d8fb97d8be2d9e4cf9796aa887df75428f983ec66f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/agents/index.ts",
+      "sha256": "e0a056ea7950d06ef716fa6deaa80c8861c278ac9a1c70faf5c8d5454e929e3c"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/background-tasks/data.ts",
+      "sha256": "89535eba152ccb8fedd9b7ae3b85399e45c75bbc53d6bccea6bc3858cd3c33be"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/background-tasks/index.ts",
+      "sha256": "a62982667760e9bf2a2be9316ca4306dbfb6cc0288ef71df0c1ef4698090cbb2"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/channels/data.ts",
+      "sha256": "6a1a842e1b9f240050395699def371a9cf2d04f242ea2d73fc252b5e58282d7e"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/channels/index.ts",
+      "sha256": "2ba1e58454d9692386b0956d88132047bd1c45cbd921b1530d3fe0395479cf82"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/datasets/data.ts",
+      "sha256": "9d2de3fa8ff279f5705a9da4a2b6fe3ec0389350f824ed4265d75a893f52e9aa"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/datasets/fidelity.ts",
+      "sha256": "bde2b849f960e22683081acfb994eb1b42524197196279350c33e8396610334f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/datasets/index.ts",
+      "sha256": "27d17ad73a9e2def5d3f566f08b89263305e8315957070020eccbc8df5c0e4cd"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/experiments/data.ts",
+      "sha256": "17a12890697689ad60bae8edf83823508207b039ed851f2bba210be22b8b3be0"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/experiments/index.ts",
+      "sha256": "f253725141d8b47a6e077815ebe83a11876d824e90abe4133a2aaf531a1eeeb0"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/favorites/data.ts",
+      "sha256": "988f8975c67f45170f5d1899111bb7d19b7ec8c53efd2e7bb2639e37684ba4aa"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/favorites/index.ts",
+      "sha256": "4932280e3756f3d630ec687da9d16854503134669c71f1f1202364d3303c63f8"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/knowledge/index.ts",
+      "sha256": "813d3da5c063d8e4415b0218183ceb56e3c176da46fb313248b81be47dfbe993"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/data.ts",
+      "sha256": "71af0152de7f2397f9ee3caff259db859548870d3638f2814553967a06f3ea54"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/index.ts",
+      "sha256": "44e993630d0876da3831234c732909e8292eae2cd01ca99ba4aba631c478ffc4"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/messages-bulk-delete.ts",
+      "sha256": "26494b98c7008bef31fcab5d25e345ad5f5f78c98e2d72182623bf0c0a3ac3ab"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/messages-list-include-resource-scope.ts",
+      "sha256": "0636e4018c05d8605a841163870bd52485c7e2c9906430b790b00ffe1431094c"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/messages-list.ts",
+      "sha256": "afd988a6baff32ba6c74e04d0869385d7c543a3268a7178418a4af7c63637853",
+      "changes": [
+        "import ../../../../../packages/memory/src/processors/observational-memory/token-counter -> @mastra/memory/processors"
+      ]
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/messages-paginated.ts",
+      "sha256": "a58909c92beef3a4e132532c80fede6fa2835884c38f8d7ab7c4e67d8ff48f15"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/messages-update.ts",
+      "sha256": "c8f96483d2926afa71b4f3d8a69ac140ad8a8109bc5a13969be60cd78d4f3a25"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/observational-memory.ts",
+      "sha256": "814db0e3a8d634d6c7505e7e8b320df1dd7448bc4d2577aea921a5401dd1baf4"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/resources.ts",
+      "sha256": "bb9fa86a82f58a02b6df175320df5921e1c58d5d41df289ff1fb11f252ceff50"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/threads.ts",
+      "sha256": "f204b8a1d8303358c61e7daac7e0cdd3b19b9f48942ec57b5d7a41aac478b6b6"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/data.ts",
+      "sha256": "95c6bcbc9a38550d4360ba30944015bc2f6ac6cc46fefab90b80bff407eb656f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/index.ts",
+      "sha256": "7374e9052cf20b43a367dc2c8787ad133e82fe263ff9f40a6f85024eac9508be"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/span-query.ts",
+      "sha256": "a15e6604eee1fb9230e5010695e83b663446211fd3adf26fbb52cee3180924cd"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/trace-aggregate.test.ts",
+      "sha256": "fed176360f7e75f3e5f378554902db1686d481d83119f351f57113264a643b13"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/trace-aggregate.ts",
+      "sha256": "fa0f537390684659e35ef5f077490bee74244674a606359e5e46c841407cb22a"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/trace-query-discovery.ts",
+      "sha256": "5fb12b2cb65a436759620d1933f37133d27b5d4c7e7af4ae2eda1b8125420e03"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/trace-query.test.ts",
+      "sha256": "32b45af60e26f0ea986a91da8a8c65a2c1dd8e9f4689f616dc0916bb9f02ce42"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/trace-query.ts",
+      "sha256": "a694654e761bb10ad657429614d48782b94542812a1de72ff87357ea52e8b264"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability/data.ts",
+      "sha256": "01fbf6f4813ac649fc6ffca00b188f5879abc6fa0a0c69b4e3c4265f5a49ec17"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability/index.ts",
+      "sha256": "399219934b07cf5e6c9821726670171fd7ca903a779c32115d4575177dceee82"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/run-fencing/index.ts",
+      "sha256": "f97355f283dabef4a7a4a84b44047996e87b54aed757d9ba08dacbe4df72907f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/schedules/data.ts",
+      "sha256": "956ebe8e1559c849d02d539693fba1a7f0af2c1fdc9d6b1a8f28c32cb25204e0"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/schedules/index.ts",
+      "sha256": "f4a8cbbf1c7dff78cbd1076068dfac347634a8a9cf52b782c80fbf0f0413538b"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/scores/data.ts",
+      "sha256": "0df4531f0b637335c554611cadc8672ca2c6d1bf12b9d6175ac5d10988b3033f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/scores/index.ts",
+      "sha256": "10709797e27e4ad9cbb15a86dea47461f838563485f1a52a19a3f2c14b8a9fef"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/skills/index.ts",
+      "sha256": "2d78dd7f3eba88dc833a7b97261a95637e6baf1b57bf9123b9afd656edee98af"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/tool-provider-connections/data.ts",
+      "sha256": "8f14aaa2090d377890935eae8bdc446e676450fc77135922161b0a528c8e97ca"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/tool-provider-connections/index.ts",
+      "sha256": "d70ff4bcd61ff9f3172d997832f4aaa6068cc86f93dcc75f911088c4b89d8174"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/advanced-operations.ts",
+      "sha256": "8e9da6769f7ae858cbab08115e4a8b133fe5d8a7bbeff572032ff51989e166ca"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/basic-operations.ts",
+      "sha256": "40c68ab7dbedccdebef4c7208acbf8bd09f85b1bd0b7c7f4d0f35811b3925027"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/edge-cases.ts",
+      "sha256": "a41120658cdc64059af9a89883c684c883c87bcf2d4e7c2cdca2350facc4c78d"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/error-handling.ts",
+      "sha256": "f72286004f7f11427706a0194ef448aa121c11b9c11ee6218f7c3b92fe2826ec"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/filter-operators.ts",
+      "sha256": "e21c05bb13d7a08ae34a9898afbce19777c57340774c87d7d399335fc48e2e88"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/index.ts",
+      "sha256": "72a261cbf70051e219bb675a3da82e99babfedf037e80eacf1fead651220d2c8"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/metadata-filtering.ts",
+      "sha256": "7dac947cbee094aa885d9ca2de51282019081068b46fb530a4bd93f536e45382"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/test-helpers.ts",
+      "sha256": "10b80087e4b5ce28239a40b3acd206d7cef0eb9b6f0cdf70c2fa3321485cd11f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/workflow-definitions/index.ts",
+      "sha256": "ca2577ff8881aa0d6b315a485d1bcefa8fc59de83ad7e14fe57740245a458ce8"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/workflows/data.ts",
+      "sha256": "1ec21f637be82e3d61b0e9e1be8df81bf8641b3def170af9c5856d9932ffb645"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/workflows/index.ts",
+      "sha256": "9572a41e45b2039fe1fce4a9bae6ee65cdf55473f729c81d58b126208e11e5cb"
+    },
+    {
+      "path": "stores/_test-utils/src/factory-storage-contract.ts",
+      "sha256": "73931eea5e8e487789e80b9cf0847957ba238fdd1ddf1689d82522f4ab9318f6"
+    },
+    {
+      "path": "stores/_test-utils/src/factory.ts",
+      "sha256": "bbf162f78974038566a966fb56cedf6e7a1142b763b38a7e7f4583297b6b6e75"
+    },
+    {
+      "path": "stores/_test-utils/src/index-config.ts",
+      "sha256": "5acafe6f1ca7c034803315f241cd9fc6e5e93f6646acf6644d4b2db1d97a4a7b"
+    },
+    {
+      "path": "stores/_test-utils/src/index.test.ts",
+      "sha256": "d343766be388f6a7b50bbb810451b45d0ccae9929b4ce0b4c00e49f89e83eace"
+    },
+    {
+      "path": "stores/_test-utils/src/index.ts",
+      "sha256": "7d91561e85f47ea4a2951b05500905db3bff58d32b1e03c146d89efc6a1e98a7"
+    },
+    {
+      "path": "stores/_test-utils/src/vector-factory.ts",
+      "sha256": "35c39ec3c411750fd53d67f5495e083f0f2094fe4d3c238e641a7534ff9d0287"
+    },
+    {
+      "path": "stores/_test-utils/vitest.config.ts",
+      "sha256": "571b3ce91547fee3d815d2f8d9bb401145e3d30ef7f7db4a791b0cbb44d1681c"
+    },
+    {
+      "path": "stores/elasticsearch/package.json",
+      "sha256": "e590dfe091568357442b01ec0dc1d21eec8329cd0939b8b28701d51baca7ab7d",
+      "changes": [
+        "rewritten for this workspace; see packages"
+      ]
+    },
+    {
+      "path": "stores/elasticsearch/src/index.ts",
+      "sha256": "0e7fd6ebb8eeea677f7f226d092473556da7aac094919288b06488d09fdf1466"
+    },
+    {
+      "path": "stores/elasticsearch/src/storage/db.ts",
+      "sha256": "0f012abc0be6b384f787f9b00f936ee67e3ce76ac207233fca8fd7d31444ea57"
+    },
+    {
+      "path": "stores/elasticsearch/src/storage/domains/memory/index.ts",
+      "sha256": "5eb2410ae35dd19163107d2b1729a394ad2482780961b80987b7e13a1d869b71"
+    },
+    {
+      "path": "stores/elasticsearch/src/storage/domains/scores/index.ts",
+      "sha256": "02f5f013bb7f91ff73c7707de5e3d13f26c998cdc5b1314469f8bf8f18fc90f7"
+    },
+    {
+      "path": "stores/elasticsearch/src/storage/domains/utils.ts",
+      "sha256": "9e8a0e37a20b3cdc3b4e550c1ad8b574dadaaef9c9f804e5a9c0f2526cce03c5"
+    },
+    {
+      "path": "stores/elasticsearch/src/storage/domains/workflows/index.ts",
+      "sha256": "a63a2e2668244a196cc42467d4cf7017da71e036b0bac38c68105e542d054a11"
+    },
+    {
+      "path": "stores/elasticsearch/src/storage/index.test.ts",
+      "sha256": "e64d1a919ce01059b38ff47713bd058be902fe1d89e2d569d7c30b00459e3ce2"
+    },
+    {
+      "path": "stores/elasticsearch/src/storage/index.ts",
+      "sha256": "0c75e901ccdb959c6a64fa0075828e2c4442ce2646da467cfbd75961be6630b7"
+    },
+    {
+      "path": "stores/elasticsearch/src/storage/store.ts",
+      "sha256": "2766cbe461f4fac3233392031afa80afaa2cba35ed4d98686539b1fd56856c01"
+    },
+    {
+      "path": "stores/elasticsearch/src/storage/types.ts",
+      "sha256": "76b50b594c774d8ed2785ba7fb8269b10bfa63e1c887a049ac0ae19ac0b0fb2e"
+    },
+    {
+      "path": "stores/elasticsearch/src/vector/filter.ts",
+      "sha256": "e32d361e086e478122963c51ce06807079da00b0695e802c63b1725c95769964"
+    },
+    {
+      "path": "stores/elasticsearch/src/vector/index.test.ts",
+      "sha256": "1a0de5616d2d7690ebac165e6b14bcb7dd8433c70e1cc9189331c1d903212291"
+    },
+    {
+      "path": "stores/elasticsearch/src/vector/index.ts",
+      "sha256": "6b36bdfdfb41d9ff4c99e056d288baa44c793af881c66affe462821b871609e6"
+    },
+    {
+      "path": "stores/elasticsearch/vitest.config.ts",
+      "sha256": "0a21ac74b3c8a6ee561e33d2099966e0c46654c27ace0261777762c46b02defa"
+    }
+  ],
+  "unresolved": []
+}

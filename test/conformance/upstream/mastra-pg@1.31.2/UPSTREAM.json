@@ -1,0 +1,1063 @@
+{
+  "package": "@mastra/pg",
+  "version": "1.31.2",
+  "tag": "@mastra/pg@1.31.2",
+  "repository": "https://github.com/mastra-ai/mastra",
+  "commit": "6a465f9d1da730e179c44bfb4ef3e6ec398ba81f",
+  "commitDate": "2026-10-15T22:55:06Z",
+  "licence": "Apache-2.0",
+  "paths": [
+    "stores/pg/package.json",
+    "stores/pg/vitest.config.ts",
+    "stores/pg/vitest.pooler.config.ts",
+    "stores/pg/src/**",
+    "stores/_test-utils/package.json",
+    "stores/_test-utils/src/**",
+    "packages/_internal-core/package.json",
+    "packages/_internal-core/src/**"
+  ],
+  "exclusions": [
+    "**/*.perf.test.ts",
+    "**/*.stress.test.ts",
+    "**/performance-test.ts",
+    "**/*benchmark*",
+    "**/row-number-performance.test.ts",
+    "**/performance-indexes.integration.test.ts",
+    "**/node_modules/**"
+  ],
+  "droppedDependencies": [
+    "@internal/lint",
+    "@internal/types-builder",
+    "@vitest/coverage-v8",
+    "@vitest/ui",
+    "eslint",
+    "oxlint",
+    "tsdown",
+    "tsx",
+    "typescript"
+  ],
+  "packages": [
+    {
+      "dir": "packages/_internal-core",
+      "name": "@loams-internal/upstream-pg-internal-core",
+      "changes": [
+        "name @internal/core -> @loams-internal/upstream-pg-internal-core",
+        "scripts removed",
+        "devDependencies.@internal/lint removed (Mastra tooling)",
+        "devDependencies.eslint removed (Mastra tooling)",
+        "devDependencies.tsdown removed (Mastra tooling)",
+        "devDependencies.typescript removed (Mastra tooling)",
+        "devDependencies.zod catalog: -> 4.6.4",
+        "exports point at src/ instead of dist/",
+        "devDependencies.@mastra/core added (1.78.0): imported by the source, hoisted upstream"
+      ]
+    },
+    {
+      "dir": "stores/_test-utils",
+      "name": "@loams-internal/upstream-pg-test-utils",
+      "changes": [
+        "name @internal/storage-test-utils -> @loams-internal/upstream-pg-test-utils",
+        "scripts reduced to test: vitest run",
+        "devDependencies.@mastra/core workspace:* -> 1.78.0",
+        "devDependencies.@vitest/coverage-v8 removed (Mastra tooling)",
+        "devDependencies.@vitest/ui removed (Mastra tooling)",
+        "devDependencies.vitest catalog: -> 4.1.11",
+        "peerDependencies.vitest catalog: -> 4.1.11",
+        "devDependencies.@mastra/memory added (1.38.0): imported by the source, hoisted upstream"
+      ]
+    },
+    {
+      "dir": "stores/pg",
+      "name": "@loams-internal/upstream-pg",
+      "changes": [
+        "name @mastra/pg -> @loams-internal/upstream-pg",
+        "private",
+        "scripts reduced to test: vitest run",
+        "devDependencies.@internal/core -> workspace:@loams-internal/upstream-pg-internal-core@*",
+        "devDependencies.@internal/lint removed (Mastra tooling)",
+        "devDependencies.@internal/storage-test-utils -> workspace:@loams-internal/upstream-pg-test-utils@*",
+        "devDependencies.@internal/types-builder removed (Mastra tooling)",
+        "devDependencies.@mastra/core workspace:* -> 1.78.0",
+        "devDependencies.@vitest/coverage-v8 removed (Mastra tooling)",
+        "devDependencies.@vitest/ui removed (Mastra tooling)",
+        "devDependencies.eslint removed (Mastra tooling)",
+        "devDependencies.tsdown removed (Mastra tooling)",
+        "devDependencies.tsx removed (Mastra tooling)",
+        "devDependencies.typescript removed (Mastra tooling)",
+        "devDependencies.vitest catalog: -> 4.1.11",
+        "devDependencies.zod added (4.6.7): imported by the source, hoisted upstream"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "packages/_internal-core/package.json",
+      "sha256": "9fb5c0413e849741d29afcab5976bd9cf3caaf38dad6d1837e015643a60fb3e7",
+      "changes": [
+        "rewritten for this workspace; see packages"
+      ]
+    },
+    {
+      "path": "packages/_internal-core/src/base/MastraBase.ts",
+      "sha256": "3a0b6d8da241091f9fa25cbcff32f08e54ae3168e19b070c01851ff11caf560c"
+    },
+    {
+      "path": "packages/_internal-core/src/base/index.ts",
+      "sha256": "8c83c871dfb8a12306104d3d762366932c56bcc352bcf28cbdc90648fe263481"
+    },
+    {
+      "path": "packages/_internal-core/src/durable/index.ts",
+      "sha256": "4f26c72167aaddf2509dc2da95829c9cd9f12715b5d87df8b7e8e50bb6bd4d98"
+    },
+    {
+      "path": "packages/_internal-core/src/error/index.ts",
+      "sha256": "01af76072d6c9c4bd5b1935a1672b7966ab8c780c80a456c9a001c936c1e68ca"
+    },
+    {
+      "path": "packages/_internal-core/src/error/utils.ts",
+      "sha256": "da4af6ec1984c21e33c2aff2ab8f384f6b9b0eff30cfe07f3e76c12491b8bb65"
+    },
+    {
+      "path": "packages/_internal-core/src/knowledge-compat/index.ts",
+      "sha256": "809e48a5fd1fab671b3e39f38020c956348e273ef2cd80552efaf89d52d5b360"
+    },
+    {
+      "path": "packages/_internal-core/src/logger/adapter.ts",
+      "sha256": "048e2eae8979b11bdb2aa4e42e5b59f321dc26b7996c120701018c831c2f91ba"
+    },
+    {
+      "path": "packages/_internal-core/src/logger/index.ts",
+      "sha256": "914b8c07dbb668d5b0cd87ed969acb18a4248cf69a1deae7e04d116e2f99e70f"
+    },
+    {
+      "path": "packages/_internal-core/src/memory/index.ts",
+      "sha256": "18c25af8d28e0185c1965edf7d2fcc379cf9255872f9d7e3dbd96a56e7b23810"
+    },
+    {
+      "path": "packages/_internal-core/src/request-context/index.ts",
+      "sha256": "2ce059cbd1fa97c89bf948410a210711d89253b5f914f882ae8d2905a638358d"
+    },
+    {
+      "path": "packages/_internal-core/src/routes/index.ts",
+      "sha256": "2b3ac0110b24d6f9e8bba6e2afce0306c8de4ccb6c924b0a42a716558ee5d9a2"
+    },
+    {
+      "path": "packages/_internal-core/src/storage/domains/observability/discovery.ts",
+      "sha256": "8312c8d11b4a49d70d90d72b33081c15c3951b2bde64fd754dcdc2c75338abea"
+    },
+    {
+      "path": "packages/_internal-core/src/storage/domains/observability/feedback.ts",
+      "sha256": "79641c872841b93d21695ed0822a663bdbc5ab8af7f317c53a60cf8b66f71abd"
+    },
+    {
+      "path": "packages/_internal-core/src/storage/domains/observability/logs.ts",
+      "sha256": "807344d7e4ed39c97234344c8cdffd1364c62359cbcc40b9bc2842de025b8ae6"
+    },
+    {
+      "path": "packages/_internal-core/src/storage/domains/observability/metrics.ts",
+      "sha256": "d7a150bef7f7a191c3c57ebd99408bfcc8c7c747633a9dee9d4c896845646b29"
+    },
+    {
+      "path": "packages/_internal-core/src/storage/domains/observability/scores.ts",
+      "sha256": "ff3353678b868b5dc02e9d6ddea1dbdb8891a4419c0fbb75594a7b925001e0c5"
+    },
+    {
+      "path": "packages/_internal-core/src/storage/domains/shared.ts",
+      "sha256": "acc96688bfb4bc2f19ef1d8a2995775c391f48699e476fcf934d60c2c060e96b"
+    },
+    {
+      "path": "packages/_internal-core/src/storage/index.ts",
+      "sha256": "9e8d37beeb7edb8dd27b34140d2083e45938db97b787fe2a00e8066150cb4ae9"
+    },
+    {
+      "path": "packages/_internal-core/src/types/index.ts",
+      "sha256": "43245a78c3e57df409fbfa7d143b50d4e6263ce2ac4c197bec6383d8ba915dd4"
+    },
+    {
+      "path": "stores/_test-utils/package.json",
+      "sha256": "5945ce583b57651b0eb65f282768a22685a65074ea9c8aa819067cc26b6788e0",
+      "changes": [
+        "rewritten for this workspace; see packages"
+      ]
+    },
+    {
+      "path": "stores/_test-utils/src/client-acceptance.ts",
+      "sha256": "c03b61c9736b5bc6c40dab8066b78812d040b9caa3c47505b31cef6e58111d7d"
+    },
+    {
+      "path": "stores/_test-utils/src/composite-tests.ts",
+      "sha256": "27abffab1e6338c868cdefd1e9f590562b6cb3e78f378b53a7391050edd5da69"
+    },
+    {
+      "path": "stores/_test-utils/src/config-validation.ts",
+      "sha256": "33de431e52863a8b56f07c15cfe3f0fc8f7b773c48f3e4bad8575324da99f259"
+    },
+    {
+      "path": "stores/_test-utils/src/domain-tests.ts",
+      "sha256": "a718282a16b28946cb1c2c74db7331fa4c0baa5454e64c8ee30f32751a9e3ca9"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/agents/data.ts",
+      "sha256": "b0734be3a352b8a0205097d8fb97d8be2d9e4cf9796aa887df75428f983ec66f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/agents/index.ts",
+      "sha256": "e0a056ea7950d06ef716fa6deaa80c8861c278ac9a1c70faf5c8d5454e929e3c"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/background-tasks/data.ts",
+      "sha256": "89535eba152ccb8fedd9b7ae3b85399e45c75bbc53d6bccea6bc3858cd3c33be"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/background-tasks/index.ts",
+      "sha256": "a62982667760e9bf2a2be9316ca4306dbfb6cc0288ef71df0c1ef4698090cbb2"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/channels/data.ts",
+      "sha256": "6a1a842e1b9f240050395699def371a9cf2d04f242ea2d73fc252b5e58282d7e"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/channels/index.ts",
+      "sha256": "2ba1e58454d9692386b0956d88132047bd1c45cbd921b1530d3fe0395479cf82"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/datasets/data.ts",
+      "sha256": "9d2de3fa8ff279f5705a9da4a2b6fe3ec0389350f824ed4265d75a893f52e9aa"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/datasets/fidelity.ts",
+      "sha256": "bde2b849f960e22683081acfb994eb1b42524197196279350c33e8396610334f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/datasets/index.ts",
+      "sha256": "27d17ad73a9e2def5d3f566f08b89263305e8315957070020eccbc8df5c0e4cd"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/experiments/data.ts",
+      "sha256": "17a12890697689ad60bae8edf83823508207b039ed851f2bba210be22b8b3be0"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/experiments/index.ts",
+      "sha256": "f253725141d8b47a6e077815ebe83a11876d824e90abe4133a2aaf531a1eeeb0"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/favorites/data.ts",
+      "sha256": "988f8975c67f45170f5d1899111bb7d19b7ec8c53efd2e7bb2639e37684ba4aa"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/favorites/index.ts",
+      "sha256": "4932280e3756f3d630ec687da9d16854503134669c71f1f1202364d3303c63f8"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/knowledge/index.ts",
+      "sha256": "813d3da5c063d8e4415b0218183ceb56e3c176da46fb313248b81be47dfbe993"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/child-process-memory-storage.ts",
+      "sha256": "1a6267691390a8e7291c89752e158043833df40911212423123ddde6a93520b9"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/data.ts",
+      "sha256": "71af0152de7f2397f9ee3caff259db859548870d3638f2814553967a06f3ea54"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/index.ts",
+      "sha256": "44e993630d0876da3831234c732909e8292eae2cd01ca99ba4aba631c478ffc4"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/messages-bulk-delete.ts",
+      "sha256": "26494b98c7008bef31fcab5d25e345ad5f5f78c98e2d72182623bf0c0a3ac3ab"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/messages-list-include-resource-scope.ts",
+      "sha256": "0636e4018c05d8605a841163870bd52485c7e2c9906430b790b00ffe1431094c"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/messages-list.ts",
+      "sha256": "afd988a6baff32ba6c74e04d0869385d7c543a3268a7178418a4af7c63637853",
+      "changes": [
+        "import ../../../../../packages/memory/src/processors/observational-memory/token-counter -> @mastra/memory/processors"
+      ]
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/messages-paginated.ts",
+      "sha256": "a58909c92beef3a4e132532c80fede6fa2835884c38f8d7ab7c4e67d8ff48f15"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/messages-update.ts",
+      "sha256": "c8f96483d2926afa71b4f3d8a69ac140ad8a8109bc5a13969be60cd78d4f3a25"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/observational-memory-concurrency.ts",
+      "sha256": "44ff9e21ceaa760e01b3bff8cc36043c876eabdd47101df71a1df74f5c517f04"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/observational-memory.ts",
+      "sha256": "e7d06a65b598f2e85aa36ff54daec80996aa6bdacd8cd34e031c23cdbdfb6593"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/resources.ts",
+      "sha256": "bb9fa86a82f58a02b6df175320df5921e1c58d5d41df289ff1fb11f252ceff50"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/memory/threads.ts",
+      "sha256": "f204b8a1d8303358c61e7daac7e0cdd3b19b9f48942ec57b5d7a41aac478b6b6"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/data.ts",
+      "sha256": "95c6bcbc9a38550d4360ba30944015bc2f6ac6cc46fefab90b80bff407eb656f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/index.ts",
+      "sha256": "7374e9052cf20b43a367dc2c8787ad133e82fe263ff9f40a6f85024eac9508be"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/previews.ts",
+      "sha256": "7965654847abdbad29c3d566c7f36eb7c0c3829ca93e2f8b72c7035434dfb0b9"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/span-query.ts",
+      "sha256": "76ed35189770273ce189dd0eeb589e7f8b7895a9edcfa0d24b5c7a0656dd2448"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/trace-aggregate.test.ts",
+      "sha256": "9f44386ab1d2313efa97f0b0bad82dfd7af6050e2b8e1354fd76dfce58a902e0"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/trace-aggregate.ts",
+      "sha256": "fa0f537390684659e35ef5f077490bee74244674a606359e5e46c841407cb22a"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/trace-query-discovery.ts",
+      "sha256": "5fb12b2cb65a436759620d1933f37133d27b5d4c7e7af4ae2eda1b8125420e03"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/trace-query.test.ts",
+      "sha256": "1abd623034ee831e624d6ebf35bc83b73448012b723fc075d36c1692669a52e9"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability-vnext/trace-query.ts",
+      "sha256": "f5de3a9844a4d91022e8940a9ab5ee382986dfe80f4b1c8773c32129249173d8"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability/data.ts",
+      "sha256": "01fbf6f4813ac649fc6ffca00b188f5879abc6fa0a0c69b4e3c4265f5a49ec17"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/observability/index.ts",
+      "sha256": "399219934b07cf5e6c9821726670171fd7ca903a779c32115d4575177dceee82"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/run-fencing/index.ts",
+      "sha256": "f203d6027d3022887800002a5f43bfd9ac8f79ce94cf7b62fb188165c7d370a3"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/schedules/data.ts",
+      "sha256": "956ebe8e1559c849d02d539693fba1a7f0af2c1fdc9d6b1a8f28c32cb25204e0"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/schedules/index.ts",
+      "sha256": "f4a8cbbf1c7dff78cbd1076068dfac347634a8a9cf52b782c80fbf0f0413538b"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/scores/data.ts",
+      "sha256": "0df4531f0b637335c554611cadc8672ca2c6d1bf12b9d6175ac5d10988b3033f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/scores/index.ts",
+      "sha256": "10709797e27e4ad9cbb15a86dea47461f838563485f1a52a19a3f2c14b8a9fef"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/skills/index.ts",
+      "sha256": "2d78dd7f3eba88dc833a7b97261a95637e6baf1b57bf9123b9afd656edee98af"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/tool-provider-connections/data.ts",
+      "sha256": "8f14aaa2090d377890935eae8bdc446e676450fc77135922161b0a528c8e97ca"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/tool-provider-connections/index.ts",
+      "sha256": "d70ff4bcd61ff9f3172d997832f4aaa6068cc86f93dcc75f911088c4b89d8174"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/advanced-operations.ts",
+      "sha256": "8e9da6769f7ae858cbab08115e4a8b133fe5d8a7bbeff572032ff51989e166ca"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/basic-operations.ts",
+      "sha256": "40c68ab7dbedccdebef4c7208acbf8bd09f85b1bd0b7c7f4d0f35811b3925027"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/edge-cases.ts",
+      "sha256": "a41120658cdc64059af9a89883c684c883c87bcf2d4e7c2cdca2350facc4c78d"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/error-handling.ts",
+      "sha256": "f72286004f7f11427706a0194ef448aa121c11b9c11ee6218f7c3b92fe2826ec"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/filter-operators.ts",
+      "sha256": "ca3a8181c9c96b0678186c491adba67a0789eadc533dc95199fefec8d8941d09"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/index.ts",
+      "sha256": "72a261cbf70051e219bb675a3da82e99babfedf037e80eacf1fead651220d2c8"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/metadata-filtering.ts",
+      "sha256": "7dac947cbee094aa885d9ca2de51282019081068b46fb530a4bd93f536e45382"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/vector/test-helpers.ts",
+      "sha256": "10b80087e4b5ce28239a40b3acd206d7cef0eb9b6f0cdf70c2fa3321485cd11f"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/workflow-definitions/index.ts",
+      "sha256": "ca2577ff8881aa0d6b315a485d1bcefa8fc59de83ad7e14fe57740245a458ce8"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/workflows/data.ts",
+      "sha256": "1ec21f637be82e3d61b0e9e1be8df81bf8641b3def170af9c5856d9932ffb645"
+    },
+    {
+      "path": "stores/_test-utils/src/domains/workflows/index.ts",
+      "sha256": "e3a250a71122c6b978610d2aacd14f3e35a55535ff797e1f117d3bc171ba1de4"
+    },
+    {
+      "path": "stores/_test-utils/src/factory-storage-contract.ts",
+      "sha256": "73931eea5e8e487789e80b9cf0847957ba238fdd1ddf1689d82522f4ab9318f6"
+    },
+    {
+      "path": "stores/_test-utils/src/factory.ts",
+      "sha256": "8d5c215693c10ff92f9ca59b69cafddc6e9dcd8811d7214ed4ba46c945f613a5"
+    },
+    {
+      "path": "stores/_test-utils/src/index-config.ts",
+      "sha256": "5acafe6f1ca7c034803315f241cd9fc6e5e93f6646acf6644d4b2db1d97a4a7b"
+    },
+    {
+      "path": "stores/_test-utils/src/index.test.ts",
+      "sha256": "d343766be388f6a7b50bbb810451b45d0ccae9929b4ce0b4c00e49f89e83eace"
+    },
+    {
+      "path": "stores/_test-utils/src/index.ts",
+      "sha256": "c96f16de02609551c89850a81bd82bae0008259b91edb6aabb75146b1e23d3c4"
+    },
+    {
+      "path": "stores/_test-utils/src/vector-factory.ts",
+      "sha256": "35c39ec3c411750fd53d67f5495e083f0f2094fe4d3c238e641a7534ff9d0287"
+    },
+    {
+      "path": "stores/pg/package.json",
+      "sha256": "cdef1c6ea5e88fbba213f00105f4b14314240b728a601aaae0c9784c2927c201",
+      "changes": [
+        "rewritten for this workspace; see packages"
+      ]
+    },
+    {
+      "path": "stores/pg/src/index.ts",
+      "sha256": "6840a4754c0a3b366c49d65fd75955277990f186724b85588f3f805b5148ae82"
+    },
+    {
+      "path": "stores/pg/src/shared/config.ts",
+      "sha256": "45ee216ce1cd7533c4ac71976d94d3d5d19ca5fe75c6d9eeb3bc1da909c1143c"
+    },
+    {
+      "path": "stores/pg/src/shared/pool-config.test.ts",
+      "sha256": "c4808740c142bc3401d5587d9cc8d6f4235b72bae0c8c4a6cce4bad346a84bcf"
+    },
+    {
+      "path": "stores/pg/src/shared/pool-config.ts",
+      "sha256": "79393ee6bb36bfcbcac209e8631b16df9650bd32ab3f73100ae871c26d6eebca"
+    },
+    {
+      "path": "stores/pg/src/shared/schema-name.test.ts",
+      "sha256": "f6340cb193c3cb35d249f9a72efdc4244f5a439cb4f94f84f635424adb12d62b"
+    },
+    {
+      "path": "stores/pg/src/shared/schema-name.ts",
+      "sha256": "f2afce07cb15a8b69f6394ab3e811dd15ced7c9d2c9c24747764d687044a550c"
+    },
+    {
+      "path": "stores/pg/src/storage/client.ts",
+      "sha256": "7e4d4be0350141f0bc899cc1fdec38834e5d28ab5aa9b448f98f508a88246808"
+    },
+    {
+      "path": "stores/pg/src/storage/client.tx-serialize.test.ts",
+      "sha256": "d3b235d56fd2023f02e18f96a53a092f8e848fbbaf0debb9610aa265c67366fb"
+    },
+    {
+      "path": "stores/pg/src/storage/dataset-fidelity.test.ts",
+      "sha256": "4cee8bde2cb3fa0baad45cf946351fc108935cd14cfbe31a6b4360f355b8f72f"
+    },
+    {
+      "path": "stores/pg/src/storage/db/constraint-utils.test.ts",
+      "sha256": "72d93a1397391f7bf30b533aff1d07e39123d07c40ee798abbeef31866835475"
+    },
+    {
+      "path": "stores/pg/src/storage/db/constraint-utils.ts",
+      "sha256": "de4e1bf624ff79fce7b38e16b7c6445dc9b4d4ce0e871088062968f7d60d61c1"
+    },
+    {
+      "path": "stores/pg/src/storage/db/index.ts",
+      "sha256": "f63629f5c49833c396afb05e3948117ee58d946936bfb4998e814e74b90a87ac"
+    },
+    {
+      "path": "stores/pg/src/storage/db/pg-errors.ts",
+      "sha256": "3831a52591c1cf1533e10d377c8e551cb3aac2f1777c44af2db476299f9330cf"
+    },
+    {
+      "path": "stores/pg/src/storage/db/pool-error-listener.test.ts",
+      "sha256": "9eebda8a7ab313c3dfd57e9fc3cddfed46792d34768ac207f682c70e9418f378"
+    },
+    {
+      "path": "stores/pg/src/storage/db/resolve-pg-config-ssl.test.ts",
+      "sha256": "48d18a749746c828fb75efc340fd34f7d280718890a1935c7535c9044e1a716c"
+    },
+    {
+      "path": "stores/pg/src/storage/db/run-fencing.test.ts",
+      "sha256": "9999cbccf1a1fdbb85cc5c5a10a1d610e8d715037d35bfb76e55e28341dacdc7"
+    },
+    {
+      "path": "stores/pg/src/storage/db/run-fencing.ts",
+      "sha256": "10a078f5175a56733e62ec3588e77e9c3fe2d625d9863b829544dbbfcdea27e8"
+    },
+    {
+      "path": "stores/pg/src/storage/db/sanitize-json.ts",
+      "sha256": "a4ad0acb4b80e09dea8b61cdcce3a08b92f8e02a3910158cdac95584e92888af"
+    },
+    {
+      "path": "stores/pg/src/storage/db/schema-setup-per-database.test.ts",
+      "sha256": "ffde1c1685a4dc67d1ad2b60cc796c1d25c66f1a6c8d0cc884a3cc34a50839db"
+    },
+    {
+      "path": "stores/pg/src/storage/db/schema-snapshot.test.ts",
+      "sha256": "10bd7d7ba44ca225165bbba8b78d60aabf62fe94df914bfa220b6a48db63cb37"
+    },
+    {
+      "path": "stores/pg/src/storage/db/schema-snapshot.ts",
+      "sha256": "0a4e26d66719f5db5553f5f4d32659e887792e7a390200d8ea66ebaa861225f1"
+    },
+    {
+      "path": "stores/pg/src/storage/db/timestamp-trigger.test.ts",
+      "sha256": "fbb816aa39f0837c707a999f62b61905ec9e294635e6757a8a0f456f07790298"
+    },
+    {
+      "path": "stores/pg/src/storage/db/transaction-client.test.ts",
+      "sha256": "655dee635eb840bcb1b586be771860c7ea79f484a4cf037b63a4774dc9593c74"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/agents/index.ts",
+      "sha256": "a01e704f98b3ec28649f957aa4ddec71d39cc21cb5ee380db85ec6edad9996c2"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/background-tasks/index.test.ts",
+      "sha256": "56c0573867ad29b4f7544d26b061e27309df196b7d25644d0edfb864bd0e3f9c"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/background-tasks/index.ts",
+      "sha256": "0418739d4796080e2064e043a816d40e91680101c7688600c2d1e8e2e0fef60a"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/blobs/index.ts",
+      "sha256": "3bbb27a31fc9b403b0233fc0feb0984cc912299e123c9da70a2f79b4f38abed0"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/channels/index.test.ts",
+      "sha256": "06b2eebe0536efab0678f733bc4a612d565fcbfb2c982f48686d5c98d6706942"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/channels/index.ts",
+      "sha256": "e8c79dc74054ecdeea16fd5c85c289ecbc5df87ec143da00d7f6514a92073362"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/create-cleanup.test.ts",
+      "sha256": "18f9f38e8ef90698d7f6a6f5b41a5ff29bec0ce590f00b2ccc4b9b62cf23928c"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/datasets/index.ts",
+      "sha256": "3ff0c6d18993cd41450477bfd15fce4221bd955975b5382b95555e02efff43be"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/datasets/item-row-mapping.test.ts",
+      "sha256": "d4b8323955875f36276a199718963670baa4d1628edc8d814c4eb71650cdf4a6"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/experiments/index.ts",
+      "sha256": "aa23aa8ec7f62bc5ab671f186d3f0f6b44d1c1a06888d9f968a45b03bee688cd"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/experiments/jsonb.test.ts",
+      "sha256": "ffec5796eafb1afad73a475feba1e75806a77e05f44ada186439e9aa91dcb6b7"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/experiments/relax-not-null.test.ts",
+      "sha256": "552258cf1d0d8a74f770f0e8218bedc0a4ee4271569ec4679f36b48403232596"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/experiments/update-result-bindings.test.ts",
+      "sha256": "103ecf3803461546908d8fbde8a79a60ccd54a7d206e4b16786ca3d3478f8d70"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/favorites/index.ts",
+      "sha256": "f97e712e9901708afa44d28c2e3e4ec73f4a122a430bcef79c625c485dd4503a"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/knowledge/fixtures/published-1.29.0.sql",
+      "sha256": "1879bd7e2cdec7c761f1b1db2a87c6b7f98c161fa09842bf121827ee8a54dc68"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/knowledge/index.test.ts",
+      "sha256": "38287db64201284c91a400507d7a51bfb4c90b42c1aa12d3ffb537eb1a4c5ffd"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/knowledge/index.ts",
+      "sha256": "6dec154180dc8000683562e84b215a9d1b633889c70181e4bf1fe615184ab8f8"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/mcp-clients/index.ts",
+      "sha256": "61b4dddca033fdfa6a17a7c6322c0f1a1d3b638ccd89016b07a4b8c7c32737ef"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/mcp-servers/index.ts",
+      "sha256": "7028f603797f3ce54b600ace22dc895af04e9639a1637559a41b6ae39778a705"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/clone-thread.test.ts",
+      "sha256": "1d4c79db98165f994e51ba20354a29f72559c0d261a9565e802bc6c4f1c7d347"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/index.ts",
+      "sha256": "07fbcfed93d1eb30c480d68dcd1bc61342b42f47417d4b6b684d3aaa5953a823"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/list-messages-include.test.ts",
+      "sha256": "dfd8a00341d97e39bbdff4e6ba40e6de4963e1f856c97218aeb76993d12d745b"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/list-messages-round-trips.test.ts",
+      "sha256": "5176702f7667ca7f31c0e493a8d5dfeb0fa769a69a25ef8a805fd400fccd2223"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/list-ordering-tie-breaker.test.ts",
+      "sha256": "6203e5b8a6dcdf831f518b510e44b1e31a925b7520878ce5345742c4579d2237"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/list-ordering-tied-timestamps.test.ts",
+      "sha256": "2c8b29c997781767e78f0824f9657c26067705a6b94f06bdf48152f74c92897f"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/merge-working-memory.test.ts",
+      "sha256": "989d7007c0a8fa82e671cbf6aa38d3e20ce052c0e63363ac1425a33b916c5751"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/om-dist-schema.test.ts",
+      "sha256": "6cc95ea18de3a330b3a311abfc5af7739f558c19735d1d14db90ff5ed119de9e"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/om-generation-concurrency.test.ts",
+      "sha256": "b4fc719666cf2e1b52fff7ac7976782e0b55516b3903342b3041f28e1e47e52e"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/om-generation.pooler.test.ts",
+      "sha256": "402683bf30fb957865da9a92d030f583b22af1b0cb817a8318a894990eaec831"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/om-history-search.test.ts",
+      "sha256": "72d8373daff378a70d488333d3855fea01d29e3a209422c2ed28d5ee02e28eb1"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/om-lifecycle-concurrency.test.ts",
+      "sha256": "f85706fe1e565929f7a9621d484561b892b4a2f79f302e3299f2ae3e02fb7279"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/om-migration-columns.test.ts",
+      "sha256": "325f22ee3914539efa520b5d68711ae16b4444870e03f6d8d7e5a0b9955e1bfe"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/save-messages.test.ts",
+      "sha256": "4def2795c65905cc504af263ee5c378a25fe84a2c565bae0d058101287b7b50a"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/test-utils.ts",
+      "sha256": "97e2a92474c6714c7a37e16494e547ccde08b6f9c7d558e301ab86b47b93d54e"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/memory/update-thread-resource-id.test.ts",
+      "sha256": "fa78c0f1445d3e958d6edd0a9832f453e9d29db98a060adca7cdd98d2fc94782"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/notifications/index.test.ts",
+      "sha256": "dbf074c17a4744f6203c0ff6860ce698755439d09031f53b1037c7cc194f177d"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/notifications/index.ts",
+      "sha256": "039734680d4a609a75011bb4ada9bf6708f458da19d10e116bcf77c82d57e5e6"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/index.ts",
+      "sha256": "777e81780d82e4f39d056fbe598dcc3d66ee2be904ef0bb2626c45dc7831d7d6"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/ddl.ts",
+      "sha256": "d180d036bea8be1e89adb5bbb1ee3fe5d4974d2d05ea637756812f99b924aaaf"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/discovery.ts",
+      "sha256": "6a23cae5302c21b8554423290f1ad27a91916b43a2eb530aa87e7d170b73786e"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/feedback.ts",
+      "sha256": "a2c22f700cc372cb0b9f24b46a1cc428012fe32e328f2205aa67934acbe0b115"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/filters.ts",
+      "sha256": "64e8abe54c70447eab592a15c33de04d512a4e477419238e4874493c687c0e85"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/helpers.test.ts",
+      "sha256": "9381a2616663fde50725296d7edadc761099cb8388ca6bd77d81806b35c69b60"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/helpers.ts",
+      "sha256": "f7cfb11ceff0b306fcd59b2f87121bc2ff487acfc65c26d7fe84394ab0a235a1"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/index.ts",
+      "sha256": "d099bdf79344f4c5531721b6f870e64a161d34721f6fd11bfee430aed357a167"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/integration.test.ts",
+      "sha256": "61ef26f1ee47ac34b30a15ab32b735d510e71a7601364cb30f23ceeac78cc796"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/listing.ts",
+      "sha256": "1ba287f7b96b32bff0e4c2979905e2233e67c2b7fa59f4f27240aa4725715358"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/logs.ts",
+      "sha256": "bbb850cb2ee6c39a98951ef9dfd45b1c76c1096776ed9dd56fc3a08f26e09f54"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/metrics.ts",
+      "sha256": "8cb1a54309eaf54c682261eb465f52d91241e7d4927d1f9095a3be7a0694a0e9"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/olap.ts",
+      "sha256": "d44b7c28ba8886fdc75c2a5ccaaf9a12fc53e747966bebefbcb364d9151ce4d2"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/partitioning.ts",
+      "sha256": "468c47e182f6cfee61e5b93ce9f9b1680831fa2c7c17f8a6d9f3864bd7c0beb0"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/pg-errors.ts",
+      "sha256": "321327791edfb8836d8fcabf8847ad46938aaaecaba5d0060767f6e73a490c11"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/polling.test.ts",
+      "sha256": "5f32a62c1d802149143249d029f1c27a62f4ffbfbf9aab26978c9d0390d48b81"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/polling.ts",
+      "sha256": "1d0662a805fb37118ecdc9f593e6dc2f179133b69d6ca48d9c2d1ab3abc04077"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/preview-compat.test.ts",
+      "sha256": "953de4360037e47767b8487882693ac713b95a5765a0d9f43a34a0c8a094afd4"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/preview-compat.ts",
+      "sha256": "d3e9362ad97d7815a5183baf462b48fff1ca5ae9022d28713374173be6dadbc6"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/retention.test.ts",
+      "sha256": "bb737ed2427179b3e60cd4dac1d8f5c54a77edd892fc5b5ca5af70ce3611737e"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/retention.ts",
+      "sha256": "5d5706f3157f40221a28db2a92d68fe945baaa1955f057ce6d962e32a1f2099c"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/review-status.ts",
+      "sha256": "570c0c2f554d0c176ed2982941f50ca4041e5e69243e976c006d88d1e57a3b5c"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/scores.test.ts",
+      "sha256": "888bb82ad48c74932bb63387cf30f411e144ac615e7ac8d621a0ad8f44b35939"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/scores.ts",
+      "sha256": "295d34df1c61c56ed661d5022b5570bf3641839b28fda357bcc2b3739b44d760"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/signal-schema.ts",
+      "sha256": "7d9de7cdcea17dbe1971069f6a0214cedfab764428f37a5612d22dc7ac52ab6c"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/span-query.test.ts",
+      "sha256": "c2238b93cc46f54f9308d8c63a391afad65209e8494edfe611bf4549984ccd89"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/span-query.ts",
+      "sha256": "1798fbe8e9edb9a9e81188e1319c4b83d1bd0dd227d0a28f83be774b7aef259b"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/sql.test.ts",
+      "sha256": "0f5cade5174fc8d39ec52faa31841a869f347e42ccb3553481afe55a56d369df"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/sql.ts",
+      "sha256": "2df8cf4cde8ae696d32fe4fea88b0074aa4fbe7f445c47bf110c49e0324af354"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/trace-aggregate.test.ts",
+      "sha256": "5ee5a412caf050126812166afaaf140dd696deb559e7b288af175f98c28571f4"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/trace-aggregate.ts",
+      "sha256": "b4e2393f3a8ac60a4b4b288964294120a090bcdf36929cd17d1838642ef1c9af"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/trace-query-compat.test.ts",
+      "sha256": "3cb3ab8cd53b0367de84bcfa1e8c7d40201b682f7ec6f22e8962249bed0f4dda"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/trace-query.test.ts",
+      "sha256": "a5296da943ecfaf27f8e176aaa0981cae239e4312e5d30e16297473c39ee7501"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/trace-query.ts",
+      "sha256": "1ca34003ef4840884323b4f23bdd4f3ab2352f114a2ba0a5ac82ce84418612ba"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/traces.ts",
+      "sha256": "4fa1d9980670744cd964a838e03840b9e846b15f9b5891984481fa1805a0702a"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/observability/v-next/tracing.ts",
+      "sha256": "ea72578ea33f9a296916d0220a14eb95aa5de7cd1d15b7eacc3cadbe5be69ef7"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/prompt-blocks/index.ts",
+      "sha256": "f104bb42759398209868373f99ed214902280aa0a442e2ccafa951e664707aff"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/schedules/index.ts",
+      "sha256": "e1d57f23d545c0f5b6093cf67f6e2325019d0459ecef9d64def29a59c47a0201"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/scorer-definitions/index.ts",
+      "sha256": "5eab1477b8dd44b1338144af0d7b81caf09d78a18cddac08406bee7a1c6b9940"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/scores/index.ts",
+      "sha256": "b0076f988a432132f10cef55d350aaf12301998d5f37127a30b7bdb50ca1fea0"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/skills/index.test.ts",
+      "sha256": "83914ebaff96fcced41ccc58f44e049a60c12fd9a1599ec388a9b7073e8072b7"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/skills/index.ts",
+      "sha256": "2720f6fb09380255b161a130e7704ec2af2123f678115961087f81a79c4ef0ae"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/thread-state/index.test.ts",
+      "sha256": "c25ea5d4594a9ba5d97b48e1c7de8b330071d98cc915413cbd4bd0fe56673d61"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/thread-state/index.ts",
+      "sha256": "7227aef33026eb4f8c9bcee291e8de0bde123fefbfbf321f4d48874ab8fb25e8"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/tool-provider-connections/index.test.ts",
+      "sha256": "852f836d5b33a39a0eb7acd3ebc7e0f3c1d5af7cb0d342376db9a32b306a4e2d"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/tool-provider-connections/index.ts",
+      "sha256": "4ceb5cb2e4cdbf37591c761cb513b3c690298ac069b9b3809ebb52499720c98a"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/utils.ts",
+      "sha256": "38c76bf70aa18b69eaf2e31f06f7858a4cdbce252b7328ecd573cd16e5692871"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/workflow-definitions/index.test.ts",
+      "sha256": "a7d211de1e6150187efd45fa5c872f818e8d832c5d98369e4231918e44a9eda1"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/workflow-definitions/index.ts",
+      "sha256": "1746bb303b22bf56f702243387ada976da81c115b090c1e957cd3c6011c2ef5e"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/workflows/concurrent-index-build.test.ts",
+      "sha256": "f5adfe569b3e9f9da0b5bdda8b2745e7fc5cff69ea284b4d352c60d658b1e0f3"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/workflows/index.ts",
+      "sha256": "c5863d100d2b54c9bc4098a781e5637a3f71fe9892e5468a567611e335410a38"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/workflows/sanitize-json.test.ts",
+      "sha256": "03fd4b93539a09ef2450fa8a69fd89502ed3fb466a8a6c65b7c990747bc82f6b"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/workflows/status-index.test.ts",
+      "sha256": "01424f1cd7ccdee86f79abef3c4a1e69e5d887be53fbbddb203830cc73bb3858"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/workflows/thread-id-filter.test.ts",
+      "sha256": "e829af96c5678a6a5349558c0c2f7898014fb0943352d5ca3a7687149b9d6ae4"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/workspaces/index.test.ts",
+      "sha256": "6908b1cb1c89040f70a1b41654f8b39b6a5a2bf8ff0f2c6f931d9a2d1edf740a"
+    },
+    {
+      "path": "stores/pg/src/storage/domains/workspaces/index.ts",
+      "sha256": "b2b583779b2ccee85ed080619ca1ec9486ded1d4cd9cd5cc6a9d659e6ed56828"
+    },
+    {
+      "path": "stores/pg/src/storage/factory-storage.test.ts",
+      "sha256": "ad495deff297613432806c8cfe223e6e9f04385332df141fdfd383d12c9e9a54"
+    },
+    {
+      "path": "stores/pg/src/storage/factory-storage.ts",
+      "sha256": "3605bdffdbd46633bb30911796fd56908a79eb6f45566c456a3e89bcb6b25690"
+    },
+    {
+      "path": "stores/pg/src/storage/index.test.ts",
+      "sha256": "94142418756347d3f43579593dc1d9552d81794da8c8cd5931535fbc9cd96649"
+    },
+    {
+      "path": "stores/pg/src/storage/index.ts",
+      "sha256": "eef87c104c54a410312197dcdd1dcb6af1b540ffe86cacce4e144275202b65b1"
+    },
+    {
+      "path": "stores/pg/src/storage/index.vnext.test.ts",
+      "sha256": "c4f89bd95cab934890fce7f944fe57876fc901d2e5ec948e9dfc04eb1b453c9d"
+    },
+    {
+      "path": "stores/pg/src/storage/migration.test.ts",
+      "sha256": "89c47a69312c14335bfa9e7d3204df52a15ec68dddab12222c32d2cc62326a3e"
+    },
+    {
+      "path": "stores/pg/src/storage/performance-indexes/performance-indexes.test.ts",
+      "sha256": "2b14b6b4bb389f90cd8d20e67f13b29a11f16380e9676d18ed16129b09eaf1bd"
+    },
+    {
+      "path": "stores/pg/src/storage/pool-error-listener.test.ts",
+      "sha256": "830af2f85216431b8be411ad4b2c85c460d1cc3f9e7bd4c69b9277d9656a577e"
+    },
+    {
+      "path": "stores/pg/src/storage/pooler-init.pooler.test.ts",
+      "sha256": "3d827a063894f42d8f786f29d5fc24b419c7d2e00525c579ca27e1137fdf5d85"
+    },
+    {
+      "path": "stores/pg/src/storage/retention.test.ts",
+      "sha256": "b45b5cc39d4326124e8e9be96307ef631d54af18bd8358a7f1f27c8961599a38"
+    },
+    {
+      "path": "stores/pg/src/storage/retention.ts",
+      "sha256": "cf15555b524827914091237809d079a52dfab94dbbcc8374ed95bdd5997107f7"
+    },
+    {
+      "path": "stores/pg/src/storage/retention.unit.test.ts",
+      "sha256": "c674278a5f68dcb06e3c1884be126f5091b2a9e58b5e720eb19219b8f135e8d2"
+    },
+    {
+      "path": "stores/pg/src/storage/test-utils.ts",
+      "sha256": "0f68cf92ba7aed3b8b5cde1e6e2892d0d84037484c86e16b05fb7d9c849c11ef"
+    },
+    {
+      "path": "stores/pg/src/vector/exists-nested-filter.test.ts",
+      "sha256": "0de0f81d977f6ecca389e952d676ce447fef0262cdbb3bfde57f0b82d8384975"
+    },
+    {
+      "path": "stores/pg/src/vector/filter.test.ts",
+      "sha256": "8f2707e5dc3646a283225747ec929fc73244afb38eed4757534f21c373e7dafd"
+    },
+    {
+      "path": "stores/pg/src/vector/filter.ts",
+      "sha256": "44b75638b88f50cae61ee30362d7b9f28185e94938fbf242abcd68d1ba940943"
+    },
+    {
+      "path": "stores/pg/src/vector/index.count-scan.test.ts",
+      "sha256": "d2fcad69ce1c639292f239350c5f5f4d8f341971231bb7646da843b0ebb2886d"
+    },
+    {
+      "path": "stores/pg/src/vector/index.disable-init.test.ts",
+      "sha256": "78d2fe678fe92d597e1a93ef1740669f92b660b049c03c9a3c4eb640514fab65"
+    },
+    {
+      "path": "stores/pg/src/vector/index.iterative-scan.test.ts",
+      "sha256": "0f9f23b5ead2c38b3816ecfa991e75884c011ed3778e1e5aa0ad9088f8a4a57b"
+    },
+    {
+      "path": "stores/pg/src/vector/index.pool-capacity.test.ts",
+      "sha256": "a2f8c64cf1833ba366cb502b8dc54e4f61d253cc525883bb2f606a638e97b737"
+    },
+    {
+      "path": "stores/pg/src/vector/index.schema-name.test.ts",
+      "sha256": "87d2bfa7e9e2f89c22e9a4dd869713f19c2205352c09ef312f7f9053536ba86a"
+    },
+    {
+      "path": "stores/pg/src/vector/index.search-path.test.ts",
+      "sha256": "25ff35f525f061c9b6db81a23720441bec36f117c124f453d8e57945a8691d2e"
+    },
+    {
+      "path": "stores/pg/src/vector/index.test.ts",
+      "sha256": "f38aec517f65d53cff09537dd80693c6e1452ab39799f4cd8edf4457d411dca4"
+    },
+    {
+      "path": "stores/pg/src/vector/index.ts",
+      "sha256": "58fe86c8081cfc65fb8c34057a92fffa4df0c6ba7b81277c104fc7760605c636"
+    },
+    {
+      "path": "stores/pg/src/vector/namespace-test-utils.ts",
+      "sha256": "51c245890b5ddcd8af22adb7698a0bbe71742e7701fa63c58ac5feb28afbb937"
+    },
+    {
+      "path": "stores/pg/src/vector/performance.helpers.test.ts",
+      "sha256": "582d5d7586eaf6d5bf6c8d95c48781862481ebb04d17c7db76947628b71ccad2"
+    },
+    {
+      "path": "stores/pg/src/vector/performance.helpers.ts",
+      "sha256": "f8c8e9bfcc5d3fcb18fcad2fc99e12aaa26a405bed20cb8fa50e84b4cce8ac03"
+    },
+    {
+      "path": "stores/pg/src/vector/pool-error-listener.test.ts",
+      "sha256": "01d3d62b98a235517a240c9d5c4d737996ff4988eedb9247fcff2efa3fa57b7d"
+    },
+    {
+      "path": "stores/pg/src/vector/prompt.ts",
+      "sha256": "4dd5f74270508209f1a03ae1afe90e4584ec1384065b4bd693aebb2c035b62e9"
+    },
+    {
+      "path": "stores/pg/src/vector/sql-builder.test.ts",
+      "sha256": "f08cea96418bfa37d27985480e383237d2b22045d157830c755f62b85a438fee"
+    },
+    {
+      "path": "stores/pg/src/vector/sql-builder.ts",
+      "sha256": "288500eba9b0255877df38d50752d65bd2caf352b3da6ca54dcc3b984672700c"
+    },
+    {
+      "path": "stores/pg/src/vector/types.ts",
+      "sha256": "2ad51a6c8ff83d623a27ce1fc8b76daf2ea73b896846a6172d6773ccbf53c971"
+    },
+    {
+      "path": "stores/pg/src/vector/vector.performance.test.ts",
+      "sha256": "c2a14cf2c18a18640ac56c491ec07fe746a1deb8c492cd18b24fa22e5668a789"
+    },
+    {
+      "path": "stores/pg/vitest.config.ts",
+      "sha256": "216b357bae7ee8ea15be7a11700f89006afa8fa4348151cc74f89a318f5378c0"
+    },
+    {
+      "path": "stores/pg/vitest.pooler.config.ts",
+      "sha256": "0b121a145ead5322de84651989a75e83e0ed9c2ff8545627c32b20ffbbbe8ab0"
+    }
+  ],
+  "unresolved": []
+}

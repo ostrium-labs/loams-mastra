@@ -1,0 +1,15 @@
+// Vendored from mastra-ai/mastra@81299c921d6f499d4c62f14c38e4d4d88b4fbfae:stores/_test-utils/src/index.ts (Apache-2.0). Changes: none.
+export * from './factory';
+export * from './factory-storage-contract';
+export * from './domains/observability-vnext';
+export * from './domains/memory/messages-list-include-resource-scope';
+export * from './domains/knowledge';
+export * from './domains/datasets/fidelity';
+export * from './domains/run-fencing';
+export * from './vector-factory';
+export * from './config-validation';
+export * from './client-acceptance';
+export * from './domain-tests';
+export * from './index-config';
+export * from './composite-tests';
+export { createSpanQueryTests } from './domains/observability-vnext/span-query';

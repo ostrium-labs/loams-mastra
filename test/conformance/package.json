@@ -1,0 +1,8 @@
+{
+  "name": "@loams-internal/conformance",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Mastra's own adapter suites, vendored at release tags, run against Loams."
+}

@@ -1,0 +1,126 @@
+{
+  "name": "@loams-internal/upstream-pg-internal-core",
+  "version": "0.1.2",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./storage": {
+      "import": {
+        "types": "./src/storage/index.ts",
+        "default": "./src/storage/index.ts"
+      },
+      "require": {
+        "types": "./src/storage/index.ts",
+        "default": "./src/storage/index.ts"
+      }
+    },
+    "./base": {
+      "import": {
+        "types": "./src/base/index.ts",
+        "default": "./src/base/index.ts"
+      },
+      "require": {
+        "types": "./src/base/index.ts",
+        "default": "./src/base/index.ts"
+      }
+    },
+    "./error": {
+      "import": {
+        "types": "./src/error/index.ts",
+        "default": "./src/error/index.ts"
+      },
+      "require": {
+        "types": "./src/error/index.ts",
+        "default": "./src/error/index.ts"
+      }
+    },
+    "./logger": {
+      "import": {
+        "types": "./src/logger/index.ts",
+        "default": "./src/logger/index.ts"
+      },
+      "require": {
+        "types": "./src/logger/index.ts",
+        "default": "./src/logger/index.ts"
+      }
+    },
+    "./types": {
+      "import": {
+        "types": "./src/types/index.ts",
+        "default": "./src/types/index.ts"
+      },
+      "require": {
+        "types": "./src/types/index.ts",
+        "default": "./src/types/index.ts"
+      }
+    },
+    "./request-context": {
+      "import": {
+        "types": "./src/request-context/index.ts",
+        "default": "./src/request-context/index.ts"
+      },
+      "require": {
+        "types": "./src/request-context/index.ts",
+        "default": "./src/request-context/index.ts"
+      }
+    },
+    "./routes": {
+      "import": {
+        "types": "./src/routes/index.ts",
+        "default": "./src/routes/index.ts"
+      },
+      "require": {
+        "types": "./src/routes/index.ts",
+        "default": "./src/routes/index.ts"
+      }
+    },
+    "./durable": {
+      "import": {
+        "types": "./src/durable/index.ts",
+        "default": "./src/durable/index.ts"
+      },
+      "require": {
+        "types": "./src/durable/index.ts",
+        "default": "./src/durable/index.ts"
+      }
+    },
+    "./knowledge-compat": {
+      "import": {
+        "types": "./src/knowledge-compat/index.ts",
+        "default": "./src/knowledge-compat/index.ts"
+      },
+      "require": {
+        "types": "./src/knowledge-compat/index.ts",
+        "default": "./src/knowledge-compat/index.ts"
+      }
+    },
+    "./memory": {
+      "import": {
+        "types": "./src/memory/index.ts",
+        "default": "./src/memory/index.ts"
+      },
+      "require": {
+        "types": "./src/memory/index.ts",
+        "default": "./src/memory/index.ts"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "scripts": {},
+  "peerDependencies": {
+    "zod": "^3.25.0 || ^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "zod": "4.6.4",
+    "@mastra/core": "1.78.0"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}

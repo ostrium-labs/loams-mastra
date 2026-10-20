@@ -1,0 +1,36 @@
+{
+  "mastra": {
+    "@mastra/core": "1.78.0",
+    "@mastra/pg": "1.31.2",
+    "@mastra/qdrant": "1.1.4",
+    "@mastra/elasticsearch": "1.4.4",
+    "@mastra/memory": "1.38.0"
+  },
+  "tags": {
+    "@mastra/pg": "@mastra/pg@1.31.2",
+    "@mastra/qdrant": "@mastra/qdrant@1.1.4",
+    "@mastra/elasticsearch": "@mastra/elasticsearch@1.4.4"
+  },
+  "commits": {
+    "@mastra/core@1.78.0": "6a465f9d1da730e179c44bfb4ef3e6ec398ba81f",
+    "@mastra/pg@1.31.2": "6a465f9d1da730e179c44bfb4ef3e6ec398ba81f",
+    "@mastra/memory@1.38.0": "6a465f9d1da730e179c44bfb4ef3e6ec398ba81f",
+    "@mastra/inngest@1.10.6": "6a465f9d1da730e179c44bfb4ef3e6ec398ba81f",
+    "@mastra/qdrant@1.1.4": "8b35a6c1d6148b24aea94a5d0493d7d7f3c7a5d5",
+    "@mastra/elasticsearch@1.4.4": "81299c921d6f499d4c62f14c38e4d4d88b4fbfae"
+  },
+  "thirdParty": {
+    "dotenv": "18.0.8",
+    "zod": "4.6.7"
+  },
+  "loams": {
+    "version": "0.1.0",
+    "deb_sha256": "38858af4414074ccceb2cd6b1f67034ed69255737dd2b0df19584dcba1ba13b0",
+    "compose_sha256": "1a0df7c916dcfc94974462f1d4a2a8c26a4e9ea3ed938503c600deef19f95cc2"
+  },
+  "qdrantJs": ["1.18.0", "1.19.0"],
+  "resonate": {
+    "sdk": "0.11.5",
+    "server": "ghcr.io/resonatehq/resonate:v0.9.8@sha256:cc226dbe25d6ad64db637d5a5e5f407fedd4cf011f4e77f4d8883ba5415289c4"
+  }
+}
