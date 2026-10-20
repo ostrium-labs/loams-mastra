@@ -2,9 +2,21 @@
   "name": "@loams/mastra",
   "version": "0.0.0",
   "private": true,
-  "description": "Loams for Mastra: storage, vectors, memory and workflow persistence on one Loams backend (placeholder; no code yet).",
+  "description": "Loams for Mastra: vectors, storage, pubsub, cache and tracing on Loams (empty until MA2).",
   "license": "Apache-2.0",
   "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ostrium-labs/loams-mastra.git",
@@ -13,6 +25,20 @@
   "homepage": "https://loams.dev",
   "bugs": "https://github.com/ostrium-labs/loams-mastra/issues",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@mastra/core": ">=1.78.0 <2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "tsdown": "0.22.9",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
   }
 }

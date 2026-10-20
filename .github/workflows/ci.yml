@@ -1,6 +1,7 @@
 name: CI
 
-# GitHub-hosted runners only.
+# GitHub-hosted runners only. The full workflow (licences, repository checks, actionlint,
+# the `CI required` aggregator) comes with MA1 Task 3.
 on:
   pull_request:
   push:
@@ -47,11 +48,9 @@ jobs:
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: '@mastra/* pinned exactly'
-        run: pnpm check:pins
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test

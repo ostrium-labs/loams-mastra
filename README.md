@@ -1,54 +1,66 @@
-# Loams × Mastra
+# Loams for Mastra
 
-[Mastra](https://mastra.ai) agents need somewhere to keep their memory, their workflow
-state, their traces and their embeddings. Usually that's four systems. With
-[Loams](https://github.com/ostrium-labs/loams) it's one backend, in your own bucket:
+[![Compatibility](https://img.shields.io/badge/Mastra_compatibility-pending-lightgrey)](COMPATIBILITY.md)
 
-- **Memory and storage**: threads, messages, working memory and workflow snapshots.
-- **Vectors and RAG**: semantic recall and retrieval, with metadata filters.
-- **Workflows** (in progress): durable execution on Loams Durable (Resonate).
-- **Observability** (planned): traces, scores and usage on Loams streams and House.
+[Mastra](https://mastra.ai) agents keep memory, workflow state, traces and embeddings
+somewhere. [Loams](https://github.com/ostrium-labs/loams) can be that one backend, in your
+own bucket: memory and storage, vectors and RAG, durable workflows, observability.
 
-Loams speaks the Qdrant and Postgres wire protocols, so Mastra's own `@mastra/qdrant` and
-`@mastra/pg` work against it without changes. This repository holds the examples, the
-conformance tests that check that claim against each Mastra release, and the native
-packages that go further.
+This repository proves compatibility first, in public, and lets Mastra's own tests be the
+judge. It runs Mastra's pg and Qdrant adapter test suites, vendored at pinned release
+tags, against `loams dev` and Loams Postgres, and ships a three-block quickstart. In
+parallel it builds a Resonate execution engine for Mastra workflows, contributed upstream
+as `@mastra/resonate`, and later a native `@loams/mastra` package for hybrid search,
+storage on collections, Streams pubsub, a cache and a span exporter.
 
-> Status: early. Phase 0 is examples and conformance against Mastra's unchanged
-> packages; native packages come later.
+## Phases
+
+| Phase | What | Status |
+|---|---|---|
+| MA0 | Compatibility with no new package: the conformance gate, quickstarts, a template, a docs page in Mastra's integrations list | In progress |
+| MAR | The Resonate execution engine (`packages/resonate`, `@loams/mastra-resonate`, upstream as `@mastra/resonate`) | In progress |
+| MA1 | Loams API fixes the gate finds (in [ostrium-labs/loams](https://github.com/ostrium-labs/loams)) | In progress |
+| MA2 | Native `@loams/mastra` on `@loams/client` | Planned |
+| MA3 | Loams Memory as Mastra processors and tools; `loams-mcp` from Mastra's MCP client | Planned |
+
+## Quickstart
+
+See [docs/quickstart.md](docs/quickstart.md) (coming with the examples). In short: Mastra's
+own `@mastra/pg` against Loams Postgres, and `@mastra/qdrant` against the Loams Qdrant
+gateway, with no Loams-specific package.
+
+## The engine is never public
+
+Every example, template and test here runs against Loams on loopback (`127.0.0.1`) or
+over a tailnet (Tailscale or Headscale). Don't expose a Loams engine to the internet to
+follow these docs.
 
 ## Layout
 
 | Path | What |
 |---|---|
-| [`packages/mastra`](packages/mastra) | `@loams/mastra`, the native adapter (placeholder) |
+| [`packages/mastra`](packages/mastra) | `@loams/mastra` (empty until MA2) |
+| `packages/resonate` | `@loams/mastra-resonate` (MAR) |
 | [`examples/`](examples) | Runnable Mastra apps on Loams |
 | [`templates/`](templates) | Starter projects |
-| [`test/conformance`](test/conformance) | Mastra's adapter test suites, run against Loams |
+| [`test/conformance`](test/conformance) | Mastra's adapter suites against Loams |
+| [`scripts/`](scripts) | Vendoring, licence and repository checks |
 
 ## Develop
 
-Node 22 or later and pnpm (`corepack enable`):
-
 ```sh
-pnpm install
-pnpm lint
-pnpm typecheck
-pnpm test
+corepack enable
+pnpm install --frozen-lockfile
+pnpm lint && pnpm typecheck && pnpm test
 ```
 
-`@mastra/*` dependencies are pinned to exact versions, and pnpm won't resolve a release
-younger than three days. `pnpm check:pins` enforces the first; see
-[CONTRIBUTING.md](CONTRIBUTING.md#dependencies).
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Community
+## License and contact
 
-- Questions and discussion: [Loams Discord](https://discord.gg/eK6NanHQq)
-- Security reports: see [SECURITY.md](SECURITY.md)
-- Contributing: see [CONTRIBUTING.md](CONTRIBUTING.md)
+[Apache-2.0](LICENSE); third-party provenance in [NOTICE](NOTICE). Mastra is a trademark
+of Kepler Software, Inc.; this project is not affiliated with or endorsed by Mastra.
 
-## License
-
-[Apache-2.0](LICENSE). Third-party provenance is listed in [NOTICE](NOTICE).
-Mastra is a trademark of Kepler Software, Inc.; this project is not affiliated with or
-endorsed by Mastra.
+- Questions: [Loams Discord](https://discord.gg/eK6NanHQq)
+- Support: support@ostriumlabs.org
+- Security: [SECURITY.md](SECURITY.md) (security@ostriumlabs.org)

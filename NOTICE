@@ -1,32 +1,18 @@
-Loams × Mastra
-Copyright 2026 Ostrium Labs and the Loams × Mastra contributors.
+Loams for Mastra
+Copyright 2026 The Loams Authors
 
-This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+This product includes software developed by The Loams Authors.
 
-This product includes or adapts software developed by third parties, listed below with
-their licences. Every adapted file carries a header naming its source and stating that it
-was changed.
+Portions of this product are derived from Mastra (https://github.com/mastra-ai/mastra),
+Copyright (c) 2025 Kepler Software, Inc., licensed under the Apache License 2.0.
+Each derived file names its source commit and path in its first line, and the
+vendored directories are listed in test/conformance/upstream/*/UPSTREAM.json.
+Nothing in this product is taken from Mastra's ee/ directories (Mastra Enterprise
+Edition License) or from Elastic-2.0 code.
 
---------------------------------------------------------------------------------
-Mastra
-https://github.com/mastra-ai/mastra
-Copyright (c) 2025 Kepler Software, Inc.
-Licensed under the Apache License, Version 2.0.
+Some Mastra packages omit a "license" field in package.json; Mastra's root
+LICENSE.md licenses them under Apache-2.0.
 
-Nothing from Mastra is included yet. Planned: test suites adapted from
-stores/_test-utils (@internal/storage-test-utils, not published to npm) and the
-adapter tests of stores/pg and stores/qdrant, at a pinned commit. Nothing is ever
-taken from Mastra's ee/ directories (Mastra Enterprise Edition License) or from the
-Elastic-2.0 provider code in packages/connect.
-
-Some Mastra packages omit the "license" field from package.json (for example
-@mastra/elasticsearch); Mastra's root LICENSE.md covers them as Apache-2.0.
-
---------------------------------------------------------------------------------
-Resonate
-https://github.com/resonatehq
-Copyright (c) Resonate HQ, Inc.
-Licensed under the Apache License, Version 2.0.
-
-Nothing from Resonate is included yet. Planned: packages/resonate, a Mastra workflow
-engine on Loams Durable (Resonate), which may adapt code from the Resonate SDKs.
+Portions of packages/resonate may be derived from the Resonate SDKs
+(https://github.com/resonatehq), Copyright Resonate HQ, Inc., licensed under the
+Apache License 2.0. Each derived file names its source in its first line.

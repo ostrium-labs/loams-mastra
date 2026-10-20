@@ -1,24 +1,27 @@
 {
   "name": "loams-mastra",
   "private": true,
-  "type": "module",
-  "description": "Loams × Mastra: one backend for Mastra memory, workflows, observability and vectors.",
   "license": "Apache-2.0",
+  "type": "module",
   "packageManager": "pnpm@11.27.1",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.13.0"
   },
   "scripts": {
+    "build": "pnpm -r --filter ./packages/* build",
+    "test": "pnpm -r --filter ./packages/* --filter ./scripts test",
+    "typecheck": "pnpm -r typecheck",
     "lint": "biome check .",
     "format": "biome check --write .",
-    "typecheck": "tsc -p tsconfig.json && pnpm -r --if-present typecheck",
-    "test": "vitest run --root . scripts && pnpm -r --if-present test",
-    "check:pins": "node scripts/check-pins.mjs"
+    "licences": "node scripts/licences.mjs",
+    "vendor": "node scripts/vendor-upstream.mjs",
+    "conformance:pinned": "pnpm --filter @loams-internal/conformance run pinned",
+    "compat": "node scripts/gen-compat.mjs",
+    "changeset": "changeset"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.15",
-    "@types/node": "24.19.2",
-    "typescript": "7.0.2",
-    "vitest": "5.0.5"
+    "@biomejs/biome": "2.5.14",
+    "@changesets/cli": "3.0.3",
+    "typescript": "5.9.3"
   }
 }
