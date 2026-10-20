@@ -37,7 +37,7 @@
     "@types/node": "24.19.2",
     "tsdown": "0.22.9",
     "typescript": "5.9.3",
-    "vitest": "4.1.11",
+    "vitest": "4.1.12",
     "zod": "4.6.5"
   },
   "peerDependencies": {
