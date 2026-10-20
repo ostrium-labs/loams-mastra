@@ -83,6 +83,12 @@ export interface ResumeRequest {
   resumeData?: unknown;
   /** A step id, a dotted path or a list of step ids into nested workflows. */
   step?: string | string[];
+  /**
+   * The `suspendedAt` of the suspension this request answers, from the snapshot the
+   * caller read. When set, a request for a suspension that was already resumed (the
+   * step has since suspended again, or not at all) is rejected.
+   */
+  suspendedAt?: number;
   label?: string;
   requestContext?: Record<string, unknown>;
   actor?: unknown;

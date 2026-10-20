@@ -300,15 +300,16 @@ export class ResonateRun<
 
     // Resolve and validate here, so the caller gets core's errors before anything is settled.
     const steps = resolveResumeSteps(snapshot, { step: params.step, label: params.label });
-    const resumeData = await this._validateResumeData(
-      params.resumeData,
-      this.workflowSteps[steps[0] ?? ''],
-    );
+    // Validated here for an early error; the pass validates and transforms the raw
+    // data once, as it does for a request from a client outside Mastra.
+    await this._validateResumeData(params.resumeData, this.workflowSteps[steps[0] ?? '']);
 
     const request: ResumeRequest = {
       resumeId: globalThis.crypto.randomUUID(),
-      resumeData,
+      resumeData: params.resumeData,
       step: steps,
+      // Names the suspension this caller saw, so a late request cannot resume a later one.
+      suspendedAt: (snapshot.context as Record<string, any>)?.[steps[0] ?? '']?.suspendedAt,
       ...(params.label ? { label: params.label } : {}),
       requestContext: serializeRequestContext(params.requestContext),
       ...(params.actor !== undefined ? { actor: params.actor } : {}),

@@ -14,6 +14,7 @@ import type {
 import { DefaultExecutionEngine } from '@mastra/core/workflows';
 import type { Context } from '@resonatehq/sdk/async';
 import { decodeError, decodeValue, encodeError, encodeValue } from './codec';
+import { resolveResumeSteps } from './resume';
 import type { InvocationPayload, ResolvedEngineConfig } from './types';
 import { ResonateWorkflow } from './workflow';
 
@@ -379,9 +380,12 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
         ? `${executionContext.runId}-foreach-${executionContext.foreachIndex}`
         : executionContext.runId;
     const isResume = !!resume?.steps?.length && resume.steps[0] === step.id;
-    const runId: string = isResume
-      ? ((stepResults[step.id] as any)?.suspendPayload?.__workflow_meta?.runId ?? derivedRunId)
-      : derivedRunId;
+    // Inside a foreach every iteration sees the aggregate step result, whose
+    // __workflow_meta names the first suspended iteration's run; use this iteration's.
+    const runId: string =
+      isResume && executionContext.foreachIndex === undefined
+        ? ((stepResults[step.id] as any)?.suspendPayload?.__workflow_meta?.runId ?? derivedRunId)
+        : derivedRunId;
 
     let nestedResume: InvocationPayload['resume'];
     if (isResume) {
@@ -393,15 +397,9 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
           const store = await this.mastra?.getStorage()?.getStore('workflows');
           const snapshot: any = await store?.loadWorkflowSnapshot({ workflowName: step.id, runId });
           const nestedSteps = resume!.steps.slice(1);
-          if (nestedSteps.length === 0) {
-            const suspendedStepIds = Object.keys(snapshot?.suspendedPaths ?? {});
-            if (suspendedStepIds.length > 1) {
-              throw new Error(
-                `Multiple suspended steps found: ${suspendedStepIds.map((id) => `[${id}]`).join(', ')}. ` +
-                  'Please specify which step to resume using the "step" parameter.',
-              );
-            }
-            if (suspendedStepIds[0]) nestedSteps.push(suspendedStepIds[0]);
+          // Normally resolved by the top-level pass; resolve it here the same way if not.
+          if (nestedSteps.length === 0 && snapshot) {
+            nestedSteps.push(...resolveResumeSteps(snapshot, {}));
           }
           return {
             steps: nestedSteps,

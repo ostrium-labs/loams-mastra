@@ -1,6 +1,6 @@
 // Vendored from mastra-ai/mastra@6a465f9d1da730e179c44bfb4ef3e6ec398ba81f:workflows/inngest/src/workflow.ts (Apache-2.0). Changes: an Inngest function per workflow replaced by a Resonate function registered under the workflow id; the invocation runs its pass as a durable child of the run's root promise; flow control, cron, durable-agent and pubsub-factory hooks removed; events go to the Mastra instance's PubSub.
 import { RequestContext } from '@mastra/core/di';
-import { getErrorFromUnknown } from '@mastra/core/error';
+import { getErrorFromUnknown, MastraError } from '@mastra/core/error';
 import type { Mastra } from '@mastra/core/mastra';
 import { EntityType, SpanType } from '@mastra/core/observability';
 import type { WorkflowRuns } from '@mastra/core/storage';
@@ -554,6 +554,29 @@ export class ResonateWorkflow<
     } else {
       try {
         steps = resolveResumeSteps(snapshot, { step: request?.step, label: request?.label });
+        // A target that names a nested workflow alone resolves inside its snapshot now,
+        // so an ambiguous target is rejected here and the run stays suspended.
+        const nested = this.steps[steps[0] ?? ''];
+        if (steps.length === 1 && nested instanceof ResonateWorkflow) {
+          const childRunId =
+            (snapshot.context as Record<string, any>)?.[steps[0]!]?.suspendPayload?.__workflow_meta
+              ?.runId ?? payload.runId;
+          const child = await workflowsStore.loadWorkflowSnapshot({
+            workflowName: nested.id,
+            runId: childRunId,
+          });
+          if (child) steps = [...steps, ...resolveResumeSteps(child, {})];
+        }
+        const current = (snapshot.context as Record<string, any>)?.[steps[0] ?? '']?.suspendedAt;
+        if (request?.suspendedAt !== undefined && request.suspendedAt !== current) {
+          throw new MastraError({
+            id: 'RESONATE_ENGINE_ALREADY_RESUMED',
+            domain: 'MASTRA_WORKFLOW',
+            category: 'USER',
+            text: `The suspension of step "${steps[0]}" this request answers was already resumed`,
+            details: { workflowId: this.id, runId: payload.runId },
+          } as any);
+        }
         const suspendedStep = this.steps[steps[0] ?? ''];
         resumePayload =
           this.options.validateInputs && suspendedStep?.resumeSchema
