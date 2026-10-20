@@ -17,6 +17,17 @@ updates:
     groups:
       mastra:
         patterns: ["@mastra/*", "mastra"]
+    # Majors are bumped by hand, with a ruling in plan MA1. Test tooling follows Mastra's own
+    # pinned toolchain (vitest, tsdown, TypeScript), so it moves when Mastra moves.
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tsdown"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-minor"]
     # The vendored suites are updated by scripts/vendor-upstream.mjs, never by Dependabot.
     exclude-paths:
       - "test/conformance/upstream/**"
@@ -28,5 +39,8 @@ updates:
       day: monday
     cooldown:
       default-days: 3
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: ci
