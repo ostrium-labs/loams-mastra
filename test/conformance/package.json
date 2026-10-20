@@ -10,7 +10,8 @@
     "pinned:qdrant-auth": "COMPAT_SUITE=qdrant-auth vitest run -c suites/qdrant/vitest.config.ts",
     "pinned": "pnpm run pinned:qdrant && pnpm run pinned:pg",
     "pinned:pg": "COMPAT_SUITE=pg vitest run -c suites/pg/vitest.config.ts",
-    "checks:postgres": "vitest run -c checks/vitest.config.ts"
+    "checks:postgres": "vitest run -c checks/vitest.config.ts",
+    "pinned:es": "COMPAT_SUITE=elasticsearch vitest run -c suites/elasticsearch/vitest.config.ts"
   },
   "devDependencies": {
     "@qdrant/js-client-rest": "1.19.0",
