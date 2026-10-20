@@ -35,6 +35,7 @@ test('no_public_endpoints_allows_loopback_and_tailnet', () => {
     'https://github.com/ostrium-labs/loams',
     'https://mastra.ai/docs',
     'http://<host>:6333',
+    'https://loams.<tailnet>.ts.net',
   ].join('\n');
   assert.deepEqual(publicHosts(text), []);
   const root = fixture({ 'docs/quickstart.md': text });

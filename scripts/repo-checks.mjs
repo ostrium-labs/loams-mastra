@@ -52,7 +52,7 @@ export function isAllowedHost(host) {
   return DOC_HOSTS.some((d) => h === d || h.endsWith(`.${d}`));
 }
 
-const URL_RE = /\bhttps?:\/\/(\[[0-9a-fA-F:]+\]|[A-Za-z0-9.-]+)(?::\d+)?/g;
+const URL_RE = /\bhttps?:\/\/(\[[0-9a-fA-F:]+\]|[A-Za-z0-9.<>{}$-]+)(?::\d+)?/g;
 
 /**
  * @param {string} text
