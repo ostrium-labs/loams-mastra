@@ -381,4 +381,26 @@ describe.skipIf(!hasServer)('ResonateExecutionEngine', () => {
     });
     expect(snapshot?.status).toBe('canceled');
   });
+
+  it('a sleep longer than half the remaining deadline survives its replay', async () => {
+    // The wake time is recorded once. Recomputing it on the replay after the timer
+    // (now + duration) would put it past the deadline and fail a sleep that completed.
+    h = harness({ timeout: 6_000 });
+    const { createWorkflow, createStep } = h;
+    const step = createStep({
+      id: 'after',
+      inputSchema: num,
+      outputSchema: num,
+      execute: async ({ inputData }) => inputData,
+    });
+    const wf = createWorkflow({ id: 'long-sleep', inputSchema: num, outputSchema: num })
+      .sleep(3_500)
+      .then(step)
+      .commit();
+    const mastra = h.mastraWith({ wf });
+    const result = await (await mastra.getWorkflow('wf').createRun()).start({
+      inputData: { value: 1 },
+    });
+    expect(result.status).toBe('success');
+  });
 });

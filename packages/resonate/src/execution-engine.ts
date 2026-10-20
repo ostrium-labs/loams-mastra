@@ -257,7 +257,17 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
 
   async #sleep(opts: { for: number } | { until: Date }): Promise<void> {
     const ctx = currentContext();
-    const wakeAt = 'until' in opts ? opts.until.getTime() : Date.now() + opts.for;
+    // A pass replays from the top after each sleep, so the wake time of a duration
+    // is recorded once: every replay checks and sleeps until the same instant.
+    const wakeAt =
+      'until' in opts
+        ? opts.until.getTime()
+        : await durable(
+            'sleep.wakeAt',
+            this.#config.timeout,
+            async () => Date.now() + opts.for,
+            ctx,
+          );
     if (wakeAt > ctx.timeoutAt) {
       throw new MastraNonRetryableError({
         id: 'RESONATE_ENGINE_SLEEP_PAST_DEADLINE',
@@ -269,7 +279,7 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
       } as any);
     }
     try {
-      await ctx.sleep(opts);
+      await ctx.sleep({ until: new Date(wakeAt) });
     } catch (e) {
       if (isPassOver(e)) return parked();
       throw e;
