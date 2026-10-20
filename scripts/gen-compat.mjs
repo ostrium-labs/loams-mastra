@@ -62,6 +62,22 @@ export function renderCompat(results) {
   ];
   if (sorted.length === 0) lines.push('| | | No results yet | | | | |');
   for (const r of sorted) lines.push(row(r));
+  // Per test: every failure, expected or not, with its issue.
+  const failing = sorted.filter((r) => (r.failures ?? []).length > 0);
+  if (failing.length > 0) {
+    lines.push('', '## Failing tests', '');
+    for (const r of failing) {
+      lines.push(`### ${r.suite}`, '', '| Test | Expected | Issue |', '|---|---|---|');
+      for (const f of r.failures ?? []) {
+        const issue = f.issue ? `[#${f.issue.split('/').pop()}](${f.issue})` : '';
+        lines.push(
+          `| ${f.test.replaceAll('|', '\\|')} | ${f.expected ? 'yes' : '**no**'} | ${issue} |`,
+        );
+      }
+      lines.push('');
+    }
+    lines.pop();
+  }
   return `${lines.join('\n')}\n`;
 }
 
