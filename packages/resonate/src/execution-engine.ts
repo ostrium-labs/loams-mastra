@@ -1,4 +1,4 @@
-// Vendored from mastra-ai/mastra@13c5517b87210189fd725ca8cb90211d98f56362:workflows/inngest/src/execution-engine.ts (Apache-2.0). Changes: Inngest's step.run/step.sleep/step.invoke replaced by Resonate durable promises (ctx.run, ctx.sleep) addressed by lineage position; each step execution runs in its own child context; span hooks left to the default engine; nested resume and time travel deferred.
+// Vendored from mastra-ai/mastra@6a465f9d1da730e179c44bfb4ef3e6ec398ba81f:workflows/inngest/src/execution-engine.ts (Apache-2.0). Changes: Inngest's step.run/step.sleep/step.invoke replaced by Resonate durable promises (ctx.run, ctx.sleep) addressed by lineage position; each step execution runs in its own child context; span hooks left to the default engine; nested resume and time travel deferred.
 import { AsyncLocalStorage } from 'node:async_hooks';
 import type { RequestContext } from '@mastra/core/di';
 import type { SerializedError } from '@mastra/core/error';

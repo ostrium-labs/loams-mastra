@@ -1,4 +1,4 @@
-// Vendored from mastra-ai/mastra@13c5517b87210189fd725ca8cb90211d98f56362:workflows/inngest/src/run.ts (Apache-2.0). Changes: start dispatches a Resonate root promise and waits on its first pass instead of sending an Inngest event and polling storage; cancel cancels the durable promise; watch and stream are inherited from core's Run through the Mastra PubSub; resume, time travel and restart are not supported yet.
+// Vendored from mastra-ai/mastra@6a465f9d1da730e179c44bfb4ef3e6ec398ba81f:workflows/inngest/src/run.ts (Apache-2.0). Changes: start dispatches a Resonate root promise and waits on its first pass instead of sending an Inngest event and polling storage; cancel cancels the durable promise; watch and stream are inherited from core's Run through the Mastra PubSub; resume, time travel and restart are not supported yet.
 import { getErrorFromUnknown, MastraError } from '@mastra/core/error';
 import type { Mastra } from '@mastra/core/mastra';
 import { MASTRA_AUTH_TOKEN_KEY, RequestContext } from '@mastra/core/request-context';

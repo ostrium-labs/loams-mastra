@@ -1,4 +1,4 @@
-// Vendored from mastra-ai/mastra@13c5517b87210189fd725ca8cb90211d98f56362:workflows/inngest/src/workflow.ts (Apache-2.0). Changes: an Inngest function per workflow replaced by a Resonate function registered under the workflow id; the invocation runs its pass as a durable child of the run's root promise; flow control, cron, durable-agent and pubsub-factory hooks removed; events go to the Mastra instance's PubSub.
+// Vendored from mastra-ai/mastra@6a465f9d1da730e179c44bfb4ef3e6ec398ba81f:workflows/inngest/src/workflow.ts (Apache-2.0). Changes: an Inngest function per workflow replaced by a Resonate function registered under the workflow id; the invocation runs its pass as a durable child of the run's root promise; flow control, cron, durable-agent and pubsub-factory hooks removed; events go to the Mastra instance's PubSub.
 import { RequestContext } from '@mastra/core/di';
 import { getErrorFromUnknown } from '@mastra/core/error';
 import type { Mastra } from '@mastra/core/mastra';
