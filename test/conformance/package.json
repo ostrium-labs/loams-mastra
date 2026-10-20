@@ -4,5 +4,15 @@
   "private": true,
   "type": "module",
   "license": "Apache-2.0",
-  "description": "Mastra's own adapter suites, vendored at release tags, run against Loams."
+  "description": "Mastra's own adapter suites, vendored at release tags, run against Loams.",
+  "scripts": {
+    "pinned:qdrant": "COMPAT_SUITE=qdrant vitest run -c suites/qdrant/vitest.config.ts",
+    "pinned:qdrant-auth": "COMPAT_SUITE=qdrant-auth vitest run -c suites/qdrant/vitest.config.ts",
+    "pinned": "pnpm run pinned:qdrant"
+  },
+  "devDependencies": {
+    "@qdrant/js-client-rest": "1.19.0",
+    "@types/node": "24.19.2",
+    "vitest": "4.1.11"
+  }
 }

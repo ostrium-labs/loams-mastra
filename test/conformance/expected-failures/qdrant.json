@@ -1,1 +1,68 @@
-[]
+[
+  {
+    "test": "QdrantVector > Filter Queries > Custom Operators > should filter using $geo radius operator",
+    "reason": "geo_radius condition answers 501 (not planned in MA1)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/898",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "QdrantVector > Filter Queries > Custom Operators > should filter using $geo box operator",
+    "reason": "geo_bounding_box condition answers 501 (not planned in MA1)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/898",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "QdrantVector > Filter Queries > Custom Operators > should filter using $geo polygon operator",
+    "reason": "geo_polygon condition answers 501 (not planned in MA1)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/898",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "QdrantVector > Filter Queries > Custom Operators > should filter using $hasVector operator",
+    "reason": "has_vector condition answers 501 (not planned in MA1)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/899",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "QdrantVector > Filter Queries > Special Cases > handles regex patterns in queries",
+    "reason": "its cleanup deletes a payload index: DELETE /collections/{c}/index/{field} answers 501 (MA1 Task 23)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/897",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "QdrantVector > Filter Queries > Special Cases > handles nested array queries",
+    "reason": "nested condition answers 501 (not planned in MA1)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/900",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "QdrantVector > Filter Queries > Special Cases > handles collection-wide operators",
+    "reason": "has_vector condition answers 501 (not planned in MA1)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/899",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "QdrantVector > Filter Queries > Special Cases > should handle complex combinations with custom operators",
+    "reason": "geo_radius inside should answers 501 (not planned in MA1)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/898",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "QdrantVector Payload Index Operations > createPayloadIndex > should support all Qdrant payload schema types",
+    "reason": "the geo payload index answers 501 (not planned in MA1)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/898",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "QdrantVector Payload Index Operations > deletePayloadIndex > should delete an existing payload index",
+    "reason": "DELETE /collections/{c}/index/{field} answers 501 (MA1 Task 23)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/897",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "QdrantVector Payload Index Operations > deletePayloadIndex > should handle deleting non-existent payload index gracefully",
+    "reason": "DELETE /collections/{c}/index/{field} answers 501 (MA1 Task 23)",
+    "issue": "https://github.com/ostrium-labs/loams/issues/897",
+    "since": "2026-10-20"
+  }
+]
