@@ -34,7 +34,11 @@ export function compareVersions(a: string, b: string): number | null {
   const x = semver(a);
   const y = semver(b);
   if (!x || !y) return null;
-  for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] < y[i] ? -1 : 1;
+  for (let i = 0; i < 3; i++) {
+    const p = x[i] ?? 0;
+    const q = y[i] ?? 0;
+    if (p !== q) return p < q ? -1 : 1;
+  }
   return 0;
 }
 
