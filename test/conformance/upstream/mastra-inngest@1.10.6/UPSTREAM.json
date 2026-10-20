@@ -1,0 +1,505 @@
+{
+  "package": "@mastra/inngest",
+  "version": "1.10.6",
+  "tag": "@mastra/inngest@1.10.6",
+  "repository": "https://github.com/mastra-ai/mastra",
+  "commit": "6a465f9d1da730e179c44bfb4ef3e6ec398ba81f",
+  "commitDate": "2026-10-15T22:55:06Z",
+  "licence": "Apache-2.0",
+  "paths": [
+    "workflows/_test-utils/package.json",
+    "workflows/_test-utils/src/**",
+    "packages/_vendored/ai_v4/package.json",
+    "packages/_vendored/ai_v4/src/**",
+    "packages/_vendored/ai_v5/package.json",
+    "packages/_vendored/ai_v5/src/**"
+  ],
+  "exclusions": [
+    "**/*.perf.test.ts",
+    "**/*.stress.test.ts",
+    "**/performance-test.ts",
+    "**/*benchmark*",
+    "**/row-number-performance.test.ts",
+    "**/performance-indexes.integration.test.ts",
+    "**/node_modules/**",
+    "workflows/_test-utils/src/domains/fga.ts"
+  ],
+  "patches": {
+    "workflows/_test-utils/src/domains/index.ts": [
+      "fga.ts is not vendored (it imports @mastra/core/auth/ee)"
+    ],
+    "workflows/_test-utils/src/factory.ts": [
+      "fga.ts is not vendored (it imports @mastra/core/auth/ee)",
+      "the FGA domain is not vendored"
+    ]
+  },
+  "droppedDependencies": [
+    "@internal/lint",
+    "@internal/types-builder",
+    "@microsoft/api-extractor",
+    "@vitest/coverage-v8",
+    "@vitest/ui",
+    "eslint",
+    "msw",
+    "oxlint",
+    "resolve.exports",
+    "ts-morph",
+    "tsdown",
+    "tsx",
+    "typescript"
+  ],
+  "packages": [
+    {
+      "dir": "packages/_vendored/ai_v4",
+      "name": "@loams-internal/upstream-inngest-ai_v4",
+      "changes": [
+        "name @internal/ai-sdk-v4 -> @loams-internal/upstream-inngest-ai_v4",
+        "scripts reduced to test: vitest run",
+        "devDependencies.@internal/lint removed (Mastra tooling)",
+        "devDependencies.@internal/types-builder removed (Mastra tooling)",
+        "devDependencies.@microsoft/api-extractor removed (Mastra tooling)",
+        "devDependencies.@vitest/coverage-v8 removed (Mastra tooling)",
+        "devDependencies.@vitest/ui removed (Mastra tooling)",
+        "devDependencies.eslint removed (Mastra tooling)",
+        "devDependencies.resolve.exports removed (Mastra tooling)",
+        "devDependencies.ts-morph removed (Mastra tooling)",
+        "devDependencies.tsdown removed (Mastra tooling)",
+        "devDependencies.tsx removed (Mastra tooling)",
+        "devDependencies.typescript removed (Mastra tooling)",
+        "exports point at src/ instead of dist/"
+      ]
+    },
+    {
+      "dir": "packages/_vendored/ai_v5",
+      "name": "@loams-internal/upstream-inngest-ai_v5",
+      "changes": [
+        "name @internal/ai-sdk-v5 -> @loams-internal/upstream-inngest-ai_v5",
+        "scripts reduced to test: vitest run",
+        "devDependencies.@internal/lint removed (Mastra tooling)",
+        "devDependencies.@internal/types-builder removed (Mastra tooling)",
+        "devDependencies.@microsoft/api-extractor removed (Mastra tooling)",
+        "devDependencies.@vitest/coverage-v8 removed (Mastra tooling)",
+        "devDependencies.@vitest/ui removed (Mastra tooling)",
+        "devDependencies.eslint removed (Mastra tooling)",
+        "devDependencies.msw removed (Mastra tooling)",
+        "devDependencies.resolve.exports removed (Mastra tooling)",
+        "devDependencies.ts-morph removed (Mastra tooling)",
+        "devDependencies.tsdown removed (Mastra tooling)",
+        "devDependencies.typescript removed (Mastra tooling)",
+        "devDependencies.zod catalog: -> 4.6.4",
+        "exports point at src/ instead of dist/"
+      ]
+    },
+    {
+      "dir": "workflows/_test-utils",
+      "name": "@loams-internal/upstream-inngest-workflow-test-utils",
+      "changes": [
+        "name @internal/workflow-test-utils -> @loams-internal/upstream-inngest-workflow-test-utils",
+        "scripts reduced to test: vitest run",
+        "devDependencies.@internal/ai-sdk-v4 -> workspace:@loams-internal/upstream-inngest-ai_v4@*",
+        "devDependencies.@internal/ai-sdk-v5 -> workspace:@loams-internal/upstream-inngest-ai_v5@*",
+        "devDependencies.@mastra/core workspace:* -> 1.78.0",
+        "devDependencies.@mastra/libsql workspace:* -> 1.26.2",
+        "devDependencies.vitest catalog: -> 4.1.11",
+        "peerDependencies.vitest catalog: -> 4.1.11"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "packages/_vendored/ai_v4/package.json",
+      "sha256": "a2830a752521b20ac3ed802d99948d68bf896f68cf76dc61dfa413e1714637dd",
+      "changes": [
+        "rewritten for this workspace; see packages"
+      ]
+    },
+    {
+      "path": "packages/_vendored/ai_v4/src/index.ts",
+      "sha256": "7b8a3a76392e39594d74fbaa6dde17bf916b059b83aa9c8d7bb0b4d38149f6b8"
+    },
+    {
+      "path": "packages/_vendored/ai_v4/src/mcp-stdio.ts",
+      "sha256": "cb2239e7ee9879a3aee332d2eb5c5ac5a8a2a25720ebc88f8ca96fb50b2cf058"
+    },
+    {
+      "path": "packages/_vendored/ai_v4/src/test.ts",
+      "sha256": "c0148d2f6ad0fd09ef691f042fcd1efb3c494d0f5afef6b19aed85273c14c677"
+    },
+    {
+      "path": "packages/_vendored/ai_v5/package.json",
+      "sha256": "454a0eb0f0693e6342218a1fdc0e1e20fad421f45778917021ef8113a1708cc1",
+      "changes": [
+        "rewritten for this workspace; see packages"
+      ]
+    },
+    {
+      "path": "packages/_vendored/ai_v5/src/fetch-import.test.ts",
+      "sha256": "a60635af1995345e2067232bbbe8663c5837c8b500e655e9d9491a4ca482f59f"
+    },
+    {
+      "path": "packages/_vendored/ai_v5/src/index.test.ts",
+      "sha256": "7a9abbafc768e8e5e19e89b42d10deed4124342e35a91a40a46f7ddeeb58f7d0"
+    },
+    {
+      "path": "packages/_vendored/ai_v5/src/index.ts",
+      "sha256": "4cdbfb5698ca58ea200daec3e54ae9cf9d6bef5080660815c6a3031182a70fd2"
+    },
+    {
+      "path": "packages/_vendored/ai_v5/src/internal.ts",
+      "sha256": "7a56d333d0717aa476c36784ec696ae2ae4ed318ae73cdc023cf9b786ca26bb3"
+    },
+    {
+      "path": "packages/_vendored/ai_v5/src/test.ts",
+      "sha256": "c0148d2f6ad0fd09ef691f042fcd1efb3c494d0f5afef6b19aed85273c14c677"
+    },
+    {
+      "path": "workflows/_test-utils/package.json",
+      "sha256": "56403ae1af431521d714569cf39056b69e9994b59b9b3190c889ed927676b9bb",
+      "changes": [
+        "rewritten for this workspace; see packages"
+      ]
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/abort.ts",
+      "sha256": "27aca05787bd0c753e1ebafd7f11aa40698196f916e6873c7a2877ecb5184813"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/advanced-durable-only.ts",
+      "sha256": "c8d89f44a8ed1aae0a4368a39833d48b4e705e0ba1f6006ff5b166133ec99154"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/advanced.ts",
+      "sha256": "fab617645a59639b3ca5799a0c641dc38054db68304c82acf185d2b37f7ad2cb"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/agent-id-context.ts",
+      "sha256": "0f6173f153461f17d821a348692969167e35fe22a0625fb36929e2492f6994ec"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/agent-step.ts",
+      "sha256": "27beaedb2f426fe5304a2da3447b2086208163de112475fd66f639ee1c490433"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/background-tasks.ts",
+      "sha256": "cebd3a65eb2d53981ff1b962c9bcced4d930c995efecc314461edd7d5bb2eb6f"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/basic-execution.ts",
+      "sha256": "2de1129534894fb2161f463da1a3d16d13363555372e4a6b1834cb4b44610082"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/branching.ts",
+      "sha256": "b36b9e80b46241933e90f7ec0aeb3e19acdb6cbb0398765bf3a4d93f9549fb9e"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/callbacks.ts",
+      "sha256": "0529aede5d92ca4ec3696c8516b49b46282c7e8c412030a0309df1527f038c2f"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/clone.ts",
+      "sha256": "69a0c1539d6b71ee78e38f7dd065a2aeb11f7174b2bc3ea160b562ea29fcef20"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/complex-conditions.ts",
+      "sha256": "009f4eea6f5e07488c2d7a78e3b29cacbd74d75342c7825c610af2aadd9dd7fc"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/constructor.ts",
+      "sha256": "219bcb23e5ba1c91cc92ada652835fe7f4a7ed9f8e0287c6598e3699168ec77a"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/dependency-injection.ts",
+      "sha256": "d8b97ba1f46d93e92e348f098014094660e2ca9500fdd19448d80536b6f8e3de"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/dynamic-memory.ts",
+      "sha256": "498f89b894ed619c269e2adca5806cfcf1d56553dc47f78a12d60af179bc294d"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/error-handling.ts",
+      "sha256": "5164f173dd48564ddfdc5e7ccd824966b946a8716c13ef6d6bf70396666d0d22"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/foreach.ts",
+      "sha256": "b98a3cdd9119d88efa2c8c08690f01ffec591b50f30dafef3987877ba8443e0d"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/images.ts",
+      "sha256": "fd43976a025434022fcd8183dfb8f1ec3eb4377257f7b2c6d1c3bcc4224f0f86"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/index.ts",
+      "sha256": "0094053208d29c1d2b4eca5006a7b30b19ddc817a9429febdb41457b9963d82a",
+      "changes": [
+        "patched: fga.ts is not vendored (it imports @mastra/core/auth/ee)"
+      ]
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/input-processors.ts",
+      "sha256": "fb271bd6376b3d4335178d7c4bc0c86471d367ab2844acc98cd4d7205954bb09"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/interoperability.ts",
+      "sha256": "b399e7c9dd4ff481a95bd68299f4be8e70c0f3003d2d984a9fdf657e465b7c39"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/loops.ts",
+      "sha256": "c49c7dc0ae2a147d4170fe97503a52740e1b16e938c72378b1c6b917668ccc13"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/memory-metadata.ts",
+      "sha256": "4d3e95731691192fb0bc5f31f8eda51fbce78355444073ed640980d33aa50ee3"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/memory-persistence.ts",
+      "sha256": "807261bd8db7ac38b1ae09e159a2e80e298e19a8682aa239debf3c2aabf62acd"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/memory-readonly.ts",
+      "sha256": "29e933bd14be5a6f6f68787bec19b3f11c0b234085b88d9f4b7cb19ec7da66d2"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/memory-requestcontext-inheritance.ts",
+      "sha256": "11185ac545ab9edaad19e06c8169e45e02345c6f7c4077466eec7c10653e065d"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/memory.ts",
+      "sha256": "30c053cc1754012f9beb13429bde44823c925d40f781080382a884ac2fe70c61"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/model-fallback-runtime.ts",
+      "sha256": "af7d2ea4bbf3cbef63e2a09484dfabcea13b972de2fbf6aaa52b43e755ee35d2"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/model-fallback.ts",
+      "sha256": "b75a7e51397791d60bb740fd17970e4182a27391ecfabf68e4ed23c6a465b10f"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/multiple-chains.ts",
+      "sha256": "06d31b8613892de6fb3bbb598d4137c7473d9856aab1706d301af1ebe855a025"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/nested-workflows.ts",
+      "sha256": "905dc23bb6b6e6e4471c80026c106e8ad3dde39a1488cf8afef014b18779cdca"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/network.ts",
+      "sha256": "9ab871f9159cabae27ac20e59e30c78e0eea433f731b6958beaa9407ecaef147"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/observe.ts",
+      "sha256": "c01f1cacbe9d3e4e93c2f199a424c680b81742d250d1bafdd508a674c99edd50"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/per-step.ts",
+      "sha256": "7dd43631cf2b2339d06cf9dbe8c78c660b24fae7a7c2074b2a125de43baba14e"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/prepare.ts",
+      "sha256": "6ea4e8f3801180fd49a55803452ce7bd145d71036cf4298aa74a2f55b779b106"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/processor-pipeline.ts",
+      "sha256": "80eaa010acfbc47884aa98824154b7aefd1992d75e3ae2c8e4f596416256ece8"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/pubsub.ts",
+      "sha256": "ffbf5d3c65e827bd0cb7db7aee846ad827d9299d6987c924c87ed5bd1ace4f2f"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/reasoning-memory.ts",
+      "sha256": "f2303856dd6b9c68760aff977e5bf2d18ffa301bbabae1bae8fe73b9be26b765"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/reasoning.ts",
+      "sha256": "277125a95e1ca0510e22361c854227dc36b2c674301a90ea991eb5673d5d5c3b"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/recovery.ts",
+      "sha256": "f16c3ccaab0ea0aa5fdc71ca6187ca2f1f872de402348ec19e8c62e0e2595b9f"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/registry.ts",
+      "sha256": "b863cca369cd529e350271752a901a33bc7a0780c3672960708eef94c32494c4"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/request-context-schema.ts",
+      "sha256": "553a3112e7b31af7722ab2c54c22dfa8176ae1fd65ce6db50cfdca2a4f709433"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/request-context.ts",
+      "sha256": "61d638368bca6a98123f1070a6d228b992cfd701f69b98c6d5a87f623fb8fd2f"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/restart.ts",
+      "sha256": "0707433e1d33ce317a34b1403a28c3f0b755b50d097d3a9ffe00f8c945b13a1b"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/retry.ts",
+      "sha256": "9886ebece3ca5ee9afcd6d7b160afa4a4c58317bf06bccd8775954fac67f64b0"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/run-count.ts",
+      "sha256": "83b238bdd4e7a3bf06e6a57896219095151a49b028faa3a00d89ccdb40db35fc"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/save-and-errors.ts",
+      "sha256": "e3c5fae5a37ff0239d003e7bbf5ea31ede036e6a3a7800aefa0914ff6a038057"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/schema-validation.ts",
+      "sha256": "d80c345389c9c44eaf6c99c85b549d0bd856d0cf478127a92e78d7acae89d334"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/scorers.ts",
+      "sha256": "ca84da231d5d7441ab0df5a0e8711e3de5ec05baf03b090de1383db04ca3a071"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/simple-conditions.ts",
+      "sha256": "657cb3e1dd4a77439c1d615ea1ea4eed7f0615bab95e13c240aad96ce4de8b8a"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/skills-with-custom-processors.ts",
+      "sha256": "98fa8b503835f359e2055bb34ff98b2e6dc040942f8c42a203468b9070d06071"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/stopwhen.ts",
+      "sha256": "a556a2b8300613ad03f3d34102018e579a2c215fda148e1ce010e0f12c4977c4"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/storage.ts",
+      "sha256": "12bf259dea35c1ed9dadccf80b55e24dafdeafb009be7450a7c1344e578595e7"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/stream-id.ts",
+      "sha256": "fb7b91e7dca8af0be6058965eedc598c167734ad76a18d6b55a6c672d92bb6b4"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/stream-until-idle.ts",
+      "sha256": "da830d145cd554e6a4330b777eba48140d1f8eafbc5a827c5ec0f647d0b922f3"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/stream.ts",
+      "sha256": "17d0ba853954ce3828df9e59a2433c96f43f4ed78f319fa8a46b763fb393abeb"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/streaming.ts",
+      "sha256": "7b58ea7485bc914140958dcbea8b311fc30ff262dec356e995c84c61c0c3b7c4"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/structured-output.ts",
+      "sha256": "7aa54df542dd290867a761ef35c161690d9389419c973b08fb9e0d1527454bf1"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/suspend-resume.ts",
+      "sha256": "8a1d1162d4246bf66dc4242604e5c394fd60ff39b758533866f6c996909229fb"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/time-travel.ts",
+      "sha256": "6783c035043eea320b6ba6b6d8aee7ea4905e33909db9c5c90d1d4d9c03bbad1"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/title-generation.ts",
+      "sha256": "2d616c83a3eb6c7feb58e393063e4ad60a0c0758964005cd6cc287486cf5aa74"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/tool-approval.ts",
+      "sha256": "cee63a03dfe8a46b52b715745c8ef5a4dc199aacf84c6b5fa66549b4467b3a17"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/tool-concurrency.ts",
+      "sha256": "77432d91ca89637439c0c3b59d6ad926984082394a023fd077483583f2dd2b66"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/tool-suspension.ts",
+      "sha256": "efac2c17971020368864859d50f96332d5f86c2192b531a2785f6dfe00a57c26"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/tool-workflow-execution.ts",
+      "sha256": "b4b3fd64792528fbacb2a96f9167dcd2c31be228ffd862c75215fa0b81496bf5"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/tools.ts",
+      "sha256": "e5512e7bbc018e64c0447b10c30395636eb22da25d672d5a560b22e2aed95af2"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/tracing.ts",
+      "sha256": "883449ca35c0cd04f8cd4d4fcf4ef57407eb95cf44c92e9592e7b90594ce5cf3"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/uimessage.ts",
+      "sha256": "3303bac33a468edba501dc893439f13931812598b46d92148fac643de172482e"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/usage.ts",
+      "sha256": "982153540284dc82a0f9dbb3d541328c282768783d72d0d4137e01e39d2a836a"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/v3-features.ts",
+      "sha256": "1c95122940b96f496eedab2576eb0f7b58dabb697a5c41ba54e3f384095a2810"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/variable-resolution.ts",
+      "sha256": "7d79a94613386b4ebd13ed44e3de417658a143c423992f63cb4d11051724e99a"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/version-overrides.ts",
+      "sha256": "c01c8115a06c6ba4aedfca106d72fda499123f9577d7ebcd989649c8a5676104"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/workflow-runs.ts",
+      "sha256": "903358832ea3aa095d1acae8dbd5c01ee4f7791f54349c8875f6cae1c577841c"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/workflow.ts",
+      "sha256": "35e180e48d501555777533258fa2685ea92bb47eaef07ab81334b8a6d4c3cd59"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/working-memory-context.ts",
+      "sha256": "f8931038420823c64ecd99afe9e10f19bfe120682c6ad298e5d7e32d9eed9c6d"
+    },
+    {
+      "path": "workflows/_test-utils/src/domains/workspace.ts",
+      "sha256": "0daa6eecbf7460418a58d507e69b0a69a211a6c9011735f2b92b9b01a456d720"
+    },
+    {
+      "path": "workflows/_test-utils/src/evented-executor.test.ts",
+      "sha256": "18b23c625adada84295576214781892ca77275e1daf6dbdf3496811866bd734f"
+    },
+    {
+      "path": "workflows/_test-utils/src/factory.ts",
+      "sha256": "8ec8d28fb5a0ee4ff22d3cd8032c99299a168905b839607adcfe4abb8b67f02d",
+      "changes": [
+        "patched: fga.ts is not vendored (it imports @mastra/core/auth/ee)",
+        "patched: the FGA domain is not vendored"
+      ]
+    },
+    {
+      "path": "workflows/_test-utils/src/index.test.ts",
+      "sha256": "296ad4c705bee30e426eea310b353bd3a89d62a1d50e5cd317b5ad158154cd4e"
+    },
+    {
+      "path": "workflows/_test-utils/src/index.ts",
+      "sha256": "7ddd4ae9935a67fca6b1106d4f2b14c77187d520ff840b29bff4b84066518b89"
+    },
+    {
+      "path": "workflows/_test-utils/src/mock-models.ts",
+      "sha256": "e3e87265da2b7a94bc55a22fd6a762cde79fcdd8e14e87c3abc010e8bd44193c"
+    },
+    {
+      "path": "workflows/_test-utils/src/mock-registry.ts",
+      "sha256": "684e75c22cf970830a12b92d7b5ae92ed44b8350f34ae1ca146dbd05d59c3336"
+    },
+    {
+      "path": "workflows/_test-utils/src/normal-agent-executor.test.ts",
+      "sha256": "0addda62e1e9a7cb1f859ff9ce731a07b591ab7f96783568aa408d32a1f9092d"
+    },
+    {
+      "path": "workflows/_test-utils/src/types.ts",
+      "sha256": "7c6ce6787f31c85be516a9947bfed2b549407f0536eb53199b901b1ed36aeaef"
+    }
+  ],
+  "unresolved": [
+    "packages/_vendored/ai_v5: imports vitest, which no manifest or pin provides"
+  ]
+}

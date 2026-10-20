@@ -37,13 +37,20 @@ describe('codec', () => {
     expect(back.steps.a.error.message).toBe('bad');
   });
 
-  it('encodes like JSON for dates, undefined and non-finite numbers', () => {
+  it('round-trips dates and encodes like JSON for undefined and non-finite numbers', () => {
     const date = new Date('2026-10-20T00:00:00.000Z');
-    expect(encodeValue({ d: date, u: undefined, n: Number.NaN, list: [undefined, 1] })).toEqual({
-      d: '2026-10-20T00:00:00.000Z',
+    const wire = JSON.parse(
+      JSON.stringify(encodeValue({ d: date, u: undefined, n: Number.NaN, list: [undefined, 1] })),
+    );
+    expect(wire).toEqual({
+      d: { __mastraResonateDate: '2026-10-20T00:00:00.000Z' },
       n: null,
       list: [null, 1],
     });
+    const back = decodeValue<{ d: Date }>(wire);
+    expect(back.d).toBeInstanceOf(Date);
+    expect(back.d.getTime()).toBe(date.getTime());
+    expect(encodeValue(new Date(Number.NaN))).toBeNull();
     expect(encodeValue(undefined)).toBeUndefined();
   });
 

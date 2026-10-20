@@ -10,6 +10,8 @@ if (backend !== 'upstream' && backend !== 'loams') {
 export default defineConfig({
   test: {
     include: ['**/*.test.ts'],
+    // Mastra's suite runs on its own, with the compat reporter: test:suite.
+    exclude: ['suites/**', '**/node_modules/**'],
     testTimeout: 120_000,
     hookTimeout: 120_000,
     fileParallelism: false,

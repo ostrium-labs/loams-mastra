@@ -8,5 +8,5 @@
     "lib": ["ES2023", "DOM"]
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", ".tmp"]
+  "exclude": ["node_modules", ".tmp", "suites"]
 }

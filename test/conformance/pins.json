@@ -4,7 +4,8 @@
     "@mastra/pg": "1.31.2",
     "@mastra/qdrant": "1.1.4",
     "@mastra/elasticsearch": "1.4.4",
-    "@mastra/memory": "1.38.0"
+    "@mastra/memory": "1.38.0",
+    "@mastra/libsql": "1.26.2"
   },
   "tags": {
     "@mastra/pg": "@mastra/pg@1.31.2",

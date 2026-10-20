@@ -3,7 +3,15 @@ import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { RefusalError, vendor } from './vendor-upstream.mjs';
+import {
+  applyPatches,
+  DEFAULT_PATHS,
+  EXCLUDES,
+  globToRegExp,
+  PATCHES,
+  RefusalError,
+  vendor,
+} from './vendor-upstream.mjs';
 
 const COMMIT = 'c0ffee0000000000000000000000000000000000';
 const TAG_OBJ = 'ta90000000000000000000000000000000000000';
@@ -213,4 +221,25 @@ test('vendor_is_reproducible', async () => {
     JSON.parse(ua).files.map((f) => f.sha256),
     JSON.parse(ub).files.map((f) => f.sha256),
   );
+});
+
+test('vendor_never_takes_the_fga_domain', () => {
+  // fga.ts imports @mastra/core/auth/ee (Mastra Enterprise Edition License).
+  const fga = 'workflows/_test-utils/src/domains/fga.ts';
+  assert.ok(EXCLUDES.some((g) => globToRegExp(g).test(fga)));
+  // Its two references are removed by recorded patches, so nothing imports it.
+  assert.equal(PATCHES['workflows/_test-utils/src/domains/index.ts']?.length, 1);
+  assert.equal(PATCHES['workflows/_test-utils/src/factory.ts']?.length, 2);
+  // Only package.json and src/ of the test utilities: their tsconfig extends Mastra's root.
+  assert.ok(!DEFAULT_PATHS['@mastra/inngest'].includes('workflows/_test-utils/**'));
+});
+
+test('vendor_patches_apply_or_fail_loudly', () => {
+  const path = 'workflows/_test-utils/src/domains/index.ts';
+  const text = "export { a } from './a';\nexport { createFGATests } from './fga';\n";
+  const { text: out, changes } = applyPatches(path, text);
+  assert.equal(out, "export { a } from './a';\n");
+  assert.deepEqual(changes, ['patched: fga.ts is not vendored (it imports @mastra/core/auth/ee)']);
+  assert.throws(() => applyPatches(path, "export { a } from './a';\n"), /no longer applies/);
+  assert.deepEqual(applyPatches('other.ts', 'x').changes, []);
 });

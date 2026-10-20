@@ -1,0 +1,62 @@
+[
+  {
+    "test": "Workflow (Resonate engine, loams) > Suspend and Resume > should suspend and resume with forEachIndex",
+    "reason": "resuming one foreach iteration by forEachIndex is not supported yet",
+    "issue": "https://github.com/ostrium-labs/loams-mastra/issues/29",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "Workflow (Resonate engine, loams) > Suspend and Resume > should suspend and resume provided label when running all items concurrency for loop",
+    "reason": "resuming one foreach iteration by label is not supported yet",
+    "issue": "https://github.com/ostrium-labs/loams-mastra/issues/29",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "Workflow (Resonate engine, loams) > Suspend and Resume > should suspend and resume provided index when running a partial item concurrency for loop",
+    "reason": "resuming one foreach iteration by index is not supported yet",
+    "issue": "https://github.com/ostrium-labs/loams-mastra/issues/29",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "Workflow (Resonate engine, loams) > Suspend and Resume > should pass correct inputData to branch condition when resuming after map",
+    "reason": "resumes through a rebuilt workflow that is not registered with Mastra, so there is no storage to resume from",
+    "issue": "https://github.com/ostrium-labs/loams-mastra/issues/30",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "Workflow (Resonate engine, loams) > restart > should restart a completed workflow execution",
+    "reason": "run.restart() is not supported yet",
+    "issue": "https://github.com/ostrium-labs/loams-mastra/issues/32",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "Workflow (Resonate engine, loams) > restart > should restart workflow with multiple steps",
+    "reason": "run.restart() is not supported yet",
+    "issue": "https://github.com/ostrium-labs/loams-mastra/issues/32",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "Workflow (Resonate engine, loams) > restart > should restart a failed workflow and succeed on retry",
+    "reason": "run.restart() is not supported yet",
+    "issue": "https://github.com/ostrium-labs/loams-mastra/issues/32",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "Workflow (Resonate engine, loams) > restart > should restart a workflow execution that was previously active and has nested workflows",
+    "reason": "run.restart() is not supported yet",
+    "issue": "https://github.com/ostrium-labs/loams-mastra/issues/32",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "Workflow (Resonate engine, loams) > restart > should successfully suspend and resume a restarted workflow execution",
+    "reason": "run.restart() is not supported yet",
+    "issue": "https://github.com/ostrium-labs/loams-mastra/issues/32",
+    "since": "2026-10-20"
+  },
+  {
+    "test": "Workflow (Resonate engine, loams) > restart > should restart workflow with parallel steps",
+    "reason": "run.restart() is not supported yet",
+    "issue": "https://github.com/ostrium-labs/loams-mastra/issues/32",
+    "since": "2026-10-20"
+  }
+]

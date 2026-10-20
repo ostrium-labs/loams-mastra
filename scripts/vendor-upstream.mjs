@@ -50,7 +50,16 @@ export const DEFAULT_PATHS = {
     'stores/elasticsearch/src/**',
     'stores/_test-utils/**',
   ],
-  '@mastra/inngest': ['workflows/_test-utils/**'],
+  '@mastra/inngest': [
+    'workflows/_test-utils/package.json',
+    'workflows/_test-utils/src/**',
+    // @internal/ai-sdk-v4 and -v5 (private, unpublished): re-exports of `ai` 4 and 5 and
+    // their `ai/test` mock models, used by the test utilities' agent domains.
+    'packages/_vendored/ai_v4/package.json',
+    'packages/_vendored/ai_v4/src/**',
+    'packages/_vendored/ai_v5/package.json',
+    'packages/_vendored/ai_v5/src/**',
+  ],
 };
 
 /** Never vendored: performance, stress and benchmark files. */
@@ -63,13 +72,62 @@ export const EXCLUDES = [
   // Imports performance-test.ts, which is excluded above.
   '**/performance-indexes.integration.test.ts',
   '**/node_modules/**',
+  // Imports @mastra/core/auth/ee (Mastra Enterprise Edition License); see PATCHES.
+  'workflows/_test-utils/src/domains/fga.ts',
 ];
+
+/**
+ * Exact edits to vendored files, each recorded in the file's header and in UPSTREAM.json.
+ * A patch whose `find` text is missing fails the run, so an upstream change is noticed.
+ */
+export const PATCHES = {
+  'workflows/_test-utils/src/domains/index.ts': [
+    {
+      find: "export { createFGATests } from './fga';\n",
+      replace: '',
+      why: 'fga.ts is not vendored (it imports @mastra/core/auth/ee)',
+    },
+  ],
+  'workflows/_test-utils/src/factory.ts': [
+    {
+      find: '  createFGATests,\n',
+      replace: '',
+      why: 'fga.ts is not vendored (it imports @mastra/core/auth/ee)',
+    },
+    {
+      find: '    if (!skip.fga) {\n      createFGATests(context);\n    }\n',
+      replace: '',
+      why: 'the FGA domain is not vendored',
+    },
+  ],
+};
+
+/**
+ * Applies the PATCHES for `path`.
+ * @param {string} path
+ * @param {string} text
+ * @returns {{ text: string, changes: string[] }}
+ */
+export function applyPatches(path, text) {
+  const changes = [];
+  let out = text;
+  for (const patch of PATCHES[path] ?? []) {
+    if (!out.includes(patch.find)) {
+      throw new Error(`${path}: patch "${patch.why}" no longer applies; review PATCHES`);
+    }
+    out = out.replace(patch.find, patch.replace);
+    changes.push(`patched: ${patch.why}`);
+  }
+  return { text: out, changes };
+}
 
 /** Private Mastra workspace packages, resolved to their vendored copies when present. */
 const INTERNAL_DIRS = {
   '@internal/storage-test-utils': 'stores/_test-utils',
   '@internal/workflow-test-utils': 'workflows/_test-utils',
   '@internal/core': 'packages/_internal-core',
+  '@internal/ai-sdk-v4': 'packages/_vendored/ai_v4',
+  '@internal/ai-sdk-v5': 'packages/_vendored/ai_v5',
 };
 
 /** Mastra's lint, build and coverage tooling: not needed to run the suites. */
@@ -83,6 +141,11 @@ const DROPPED_DEPS = new Set([
   'typescript',
   '@vitest/coverage-v8',
   '@vitest/ui',
+  // Build tooling of Mastra's vendored ai-sdk wrappers.
+  '@microsoft/api-extractor',
+  'ts-morph',
+  'resolve.exports',
+  'msw',
 ]);
 
 /** Relative imports that leave the vendored tree, and the published module that replaces them. */
@@ -447,10 +510,11 @@ export async function vendor(opts) {
   const output = new Map();
   for (const p of selected) {
     const text = /** @type {string} */ (contents.get(p));
-    let body = text;
-    const changes = [];
+    const patched = applyPatches(p, text);
+    let body = patched.text;
+    const changes = [...patched.changes];
     if (CODE.test(p)) {
-      const r = rewriteImports(p, text, files);
+      const r = rewriteImports(p, body, files);
       body = r.text;
       if (r.rewritten.length) changes.push(...r.rewritten.map((x) => `import ${x}`));
       for (const u of r.unresolved)
@@ -464,7 +528,11 @@ export async function vendor(opts) {
         }
         imports.set(d, set);
       }
-      const header = `// Vendored from mastra-ai/mastra@${commit}:${p} (Apache-2.0). Changes: ${changes.length ? 'imports rewritten' : 'none'}.\n`;
+      const described = [
+        ...patched.changes,
+        ...(changes.length > patched.changes.length ? ['imports rewritten'] : []),
+      ];
+      const header = `// Vendored from mastra-ai/mastra@${commit}:${p} (Apache-2.0). Changes: ${described.length ? described.join('; ') : 'none'}.\n`;
       body = body.startsWith('#!') ? body.replace(/^(#![^\n]*\n)/, `$1${header}`) : header + body;
     }
     output.set(p, body);
@@ -501,6 +569,9 @@ export async function vendor(opts) {
     licence: 'Apache-2.0',
     paths: patterns,
     exclusions: EXCLUDES,
+    patches: Object.fromEntries(
+      Object.entries(PATCHES).map(([p, list]) => [p, list.map((x) => x.why)]),
+    ),
     droppedDependencies: [...DROPPED_DEPS].sort(),
     packages,
     files: fileRecords,

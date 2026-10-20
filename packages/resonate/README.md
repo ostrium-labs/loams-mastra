@@ -119,8 +119,8 @@ Do not change a workflow's graph while runs of it are in flight; finish or cance
 Everything stored in a durable promise goes through a JSON codec that keeps errors whole
 (`name`, `message`, `stack`, `cause` chain and custom properties such as `statusCode`) and
 refuses functions, symbols, bigints and cycles with a `CodecError` instead of dropping
-them. Step inputs and outputs must therefore be JSON-serialisable, as with any durable
-engine.
+them. Dates round-trip as `Date`s. Step inputs and outputs must otherwise be
+JSON-serialisable, as with any durable engine.
 
 ## Parity with `@mastra/inngest`
 
@@ -150,8 +150,11 @@ engine.
 ## Limits
 
 - Time travel and `restart` throw "not supported yet".
-- `perStep` execution and Mastra's full `workflows/_test-utils` suite have not been run
-  against this engine yet.
+- Mastra's workflow test utilities (vendored from `@mastra/inngest@1.10.6`): 259 of 290
+  tests pass on both backends. The other failures are listed with their issues in
+  `test/conformance/expected-failures/resonate-*.json`: resuming one foreach iteration by
+  index or label, resuming through a workflow rebuilt without Mastra, and `restart()`.
+  One test, suspend and resume through `streamLegacy`, is skipped because it hangs.
 - Control-flow container spans (parallel, conditional, loop, foreach) are created outside
   memoised operations and can be exported again when a pass replays.
 - A run's promises share one deadline (`timeout`). A resume promise that times out leaves

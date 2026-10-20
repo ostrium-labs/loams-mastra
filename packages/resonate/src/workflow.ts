@@ -167,6 +167,17 @@ export class ResonateWorkflow<
     resourceId?: string;
     disableScorers?: boolean;
   }): Promise<Run<TEngineType, TSteps, TState, TInput, TOutput, TRequestContext>> {
+    // The same checks as core's Workflow.createRun.
+    if (this.stepFlow.length === 0) {
+      throw new Error(
+        'Execution flow of workflow is not defined. Add steps to the workflow via .then(), .branch(), etc.',
+      );
+    }
+    if (!this.executionGraph.steps) {
+      throw new Error(
+        'Uncommitted step flow changes detected. Call .commit() to register the steps.',
+      );
+    }
     const runId = options?.runId || globalThis.crypto.randomUUID();
     const existing = this.runs.get(runId);
     const run = (existing ??
@@ -175,6 +186,11 @@ export class ResonateWorkflow<
           workflowId: this.id,
           runId,
           resourceId: options?.resourceId,
+          stateSchema: this.stateSchema,
+          inputSchema: this.inputSchema,
+          requestContextSchema: this.requestContextSchema,
+          disableScorers: options?.disableScorers,
+          tracingPolicy: this.options.tracingPolicy,
           executionEngine: this.executionEngine,
           executionGraph: this.executionGraph,
           serializedStepGraph: this.serializedStepGraph,
@@ -436,7 +452,11 @@ export class ResonateWorkflow<
         const workflowsStore = await mastra?.getStorage()?.getStore('workflows');
         if (workflowsStore) {
           let existing:
-            | { suspendedPaths?: Record<string, number[]>; resumeLabels?: Record<string, any> }
+            | {
+                suspendedPaths?: Record<string, number[]>;
+                resumeLabels?: Record<string, any>;
+                requestContext?: Record<string, any>;
+              }
             | undefined;
           if (result.status === 'suspended') {
             existing =
@@ -449,6 +469,7 @@ export class ResonateWorkflow<
             value: result.state ?? initialState ?? {},
             context: result.steps as unknown as WorkflowRunState['context'],
             activePaths: [],
+            stepExecutionPath: (result as { stepExecutionPath?: string[] }).stepExecutionPath,
             activeStepsPath: {},
             serializedStepGraph: this.serializedStepGraph,
             suspendedPaths: existing?.suspendedPaths ?? {},
@@ -459,7 +480,9 @@ export class ResonateWorkflow<
                 ? (result.result as WorkflowRunState['result'])
                 : undefined,
             error: result.status === 'failed' ? (result.error as any) : undefined,
-            requestContext: requestContext.toJSON(),
+            // A suspended run keeps the request context its steps left (the default
+            // engine persisted it when the step suspended); resume continues from it.
+            requestContext: existing?.requestContext ?? requestContext.toJSON(),
             tracingContext: workflowSpanData
               ? { traceId: workflowSpanData.traceId, spanId: workflowSpanData.id }
               : undefined,
@@ -507,6 +530,7 @@ export class ResonateWorkflow<
           stepResults: Record<string, any>;
           resumePayload: unknown;
           resumePath: number[];
+          stepExecutionPath?: string[];
           forEachIndex?: number;
           label?: string;
         };
@@ -583,24 +607,31 @@ export class ResonateWorkflow<
       requestContext = { ...requestContext, ...(request?.requestContext ?? {}) };
     }
 
-    await workflowsStore.persistWorkflowSnapshot({
-      workflowName: this.id,
-      runId: payload.runId,
-      resourceId: payload.resourceId,
-      snapshot: {
-        ...snapshot,
-        status: 'running',
-        result: undefined,
-        error: undefined,
-        timestamp: Date.now(),
-      } as any,
-    });
+    if (
+      this.options.shouldPersistSnapshot({
+        workflowStatus: 'running',
+        stepResults: snapshot.context as Record<string, any>,
+      })
+    )
+      await workflowsStore.persistWorkflowSnapshot({
+        workflowName: this.id,
+        runId: payload.runId,
+        resourceId: payload.resourceId,
+        snapshot: {
+          ...snapshot,
+          status: 'running',
+          result: undefined,
+          error: undefined,
+          timestamp: Date.now(),
+        } as any,
+      });
 
     return {
       resume: {
         steps,
         stepResults: snapshot.context as Record<string, any>,
         resumePayload,
+        stepExecutionPath: (snapshot as { stepExecutionPath?: string[] }).stepExecutionPath,
         resumePath: (payload.resume?.resumePath ??
           snapshot.suspendedPaths?.[steps[0] ?? '']) as number[],
         ...(request?.forEachIndex !== undefined ? { forEachIndex: request.forEachIndex } : {}),

@@ -287,6 +287,22 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
     }
   }
 
+  /**
+   * Concurrent branches finish in network order, so their suspensions would be
+   * recorded in a different order on each run. Keep `suspendedPaths` in
+   * execution-path order (graph order), which is what the default engine produces.
+   */
+  override applyMutableContext(
+    executionContext: ExecutionContext,
+    mutableContext: Parameters<DefaultExecutionEngine['applyMutableContext']>[1],
+  ): void {
+    super.applyMutableContext(executionContext, mutableContext);
+    const paths = executionContext.suspendedPaths;
+    const sorted = Object.entries(paths).sort(([, a], [, b]) => comparePaths(a, b));
+    for (const key of Object.keys(paths)) delete paths[key];
+    for (const [key, value] of sorted) paths[key] = value;
+  }
+
   // Step executions: one child context each, so that concurrent branches
   // (parallel, conditional, foreach) never interleave durable operations.
 
@@ -556,6 +572,14 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
       resumePayload: isResume ? resume?.resumePayload : undefined,
     } as StepResult<any, any, any, any>;
   }
+}
+
+function comparePaths(a: number[] = [], b: number[] = []): number {
+  for (let i = 0; i < Math.min(a.length, b.length); i++) {
+    const d = (a[i] ?? 0) - (b[i] ?? 0);
+    if (d !== 0) return d;
+  }
+  return a.length - b.length;
 }
 
 function entryId(

@@ -76,7 +76,7 @@ export interface Verdict {
 }
 
 export const ISSUE_URL =
-  /^https:\/\/github\.com\/(?:ostrium-labs\/(?:loams|loams-postgres)|mastra-ai\/mastra)\/issues\/\d+$/;
+  /^https:\/\/github\.com\/(?:ostrium-labs\/(?:loams|loams-postgres|loams-mastra)|mastra-ai\/mastra)\/issues\/\d+$/;
 
 const LK_KEY = /lk_[0-9A-Za-z]{10,}(?:_[0-9A-Za-z]+)?/g;
 

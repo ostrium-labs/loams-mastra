@@ -72,6 +72,7 @@ describe('compat reporter', () => {
     }
     for (const issue of [
       'https://github.com/ostrium-labs/loams-postgres/issues/3',
+      'https://github.com/ostrium-labs/loams-mastra/issues/29',
       'https://github.com/mastra-ai/mastra/issues/25001',
     ]) {
       const { results } = await evaluate(

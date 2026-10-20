@@ -6,6 +6,7 @@ packages:
   # Vendored Mastra packages keep Mastra's layout: upstream/<pkg>@<version>/{stores,packages,workflows}/<name>
   - test/conformance/upstream/*/stores/*
   - test/conformance/upstream/*/packages/*
+  - test/conformance/upstream/*/packages/_vendored/*
   - test/conformance/upstream/*/workflows/*
   - test/resonate
   - scripts

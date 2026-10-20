@@ -13,12 +13,16 @@ import { getErrorFromUnknown } from '@mastra/core/error';
  * serializer (`getErrorFromUnknown(...).toJSON()`), and are revived with
  * `getErrorFromUnknown`, so they round-trip the way Mastra's snapshots do.
  *
+ * Dates become `{ [DATE_TAG]: iso }` and come back as `Date`s (plain JSON would
+ * turn them into strings, which a step's `z.date()` input schema then rejects).
+ *
  * Values JSON cannot carry faithfully are refused with a {@link CodecError}
  * instead of being dropped: functions, symbols, bigints and cycles.
  * `undefined` object properties are dropped, as JSON does.
  */
 
 const ERROR_TAG = '__mastraResonateError';
+const DATE_TAG = '__mastraResonateDate';
 
 export class CodecError extends Error {
   readonly path: string;
@@ -90,9 +94,13 @@ function encode(value: unknown, path: string, ancestors: Set<object>): Json {
     return encodeError(obj);
   }
 
+  if (obj instanceof Date) {
+    return Number.isNaN(obj.getTime()) ? null : { [DATE_TAG]: obj.toISOString() };
+  }
+
   ancestors.add(obj);
   try {
-    // Dates, URLs and anything else with toJSON behave as they do under JSON.stringify.
+    // URLs and anything else with toJSON behave as they do under JSON.stringify.
     const toJSON = (obj as { toJSON?: unknown }).toJSON;
     if (typeof toJSON === 'function') {
       return encode(toJSON.call(obj), path, ancestors);
@@ -127,6 +135,9 @@ function decode(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(decode);
 
   const record = value as Record<string, unknown>;
+  if (typeof record[DATE_TAG] === 'string' && Object.keys(record).length === 1) {
+    return new Date(record[DATE_TAG] as string);
+  }
   const out: Record<string, unknown> = {};
   for (const [key, entry] of Object.entries(record)) {
     if (key === ERROR_TAG) continue;

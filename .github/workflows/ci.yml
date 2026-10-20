@@ -107,6 +107,8 @@ jobs:
         run: pnpm --filter @loams/mastra-resonate test
       - name: Crash and backend tests
         run: pnpm --filter @loams-internal/resonate-tests test
+      - name: Mastra's workflow test utilities
+        run: pnpm --filter @loams-internal/resonate-tests test:suite
       - name: Server logs
         if: failure()
         run: |

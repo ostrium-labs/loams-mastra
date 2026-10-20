@@ -118,24 +118,29 @@ export class ResonateRun<
     });
 
     const workflowsStore = await this.#mastra?.getStorage()?.getStore('workflows');
-    await workflowsStore?.persistWorkflowSnapshot({
-      workflowName: this.workflowId,
-      runId: this.runId,
-      resourceId: this.resourceId,
-      snapshot: {
-        runId: this.runId,
-        serializedStepGraph: this.serializedStepGraph,
-        status: 'running',
-        value: {},
-        context: {} as any,
-        activePaths: [],
-        suspendedPaths: {},
-        activeStepsPath: {},
-        resumeLabels: {},
-        waitingPaths: {},
-        timestamp: Date.now(),
-      },
+    const persistRunning = this.executionEngine.options.shouldPersistSnapshot({
+      workflowStatus: 'running',
+      stepResults: {},
     });
+    if (persistRunning)
+      await workflowsStore?.persistWorkflowSnapshot({
+        workflowName: this.workflowId,
+        runId: this.runId,
+        resourceId: this.resourceId,
+        snapshot: {
+          runId: this.runId,
+          serializedStepGraph: this.serializedStepGraph,
+          status: 'running',
+          value: {},
+          context: {} as any,
+          activePaths: [],
+          suspendedPaths: {},
+          activeStepsPath: {},
+          resumeLabels: {},
+          waitingPaths: {},
+          timestamp: Date.now(),
+        },
+      });
 
     const payload: InvocationPayload = {
       kind: 'start',
