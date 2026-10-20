@@ -1,6 +1,8 @@
 name: Release
 
-# npm trusted publishing (OIDC) with provenance; no NPM_TOKEN anywhere.
+# npm trusted publishing (OIDC) with provenance.
+# bootstrap: NPM_TOKEN for the first publish of new package names; remove once
+# trusted publishing is configured on npm (owner action).
 # Publishes nothing while every package is private.
 on:
   workflow_dispatch:
@@ -42,3 +44,4 @@ jobs:
           publish: pnpm publish -r --provenance --access public --no-git-checks
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
