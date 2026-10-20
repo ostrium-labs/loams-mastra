@@ -5,6 +5,12 @@
   "type": "module",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test && vitest run --config ../test/conformance/reporter/vitest.config.ts",
+    "typecheck": "tsc -p ../test/conformance/reporter/tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
   }
 }
