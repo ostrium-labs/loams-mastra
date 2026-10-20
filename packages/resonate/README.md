@@ -9,8 +9,7 @@ package is a Mastra execution engine for it, laid out like Mastra's own
 against the upstream Resonate server and against [Loams](https://github.com/ostrium-labs/loams)
 Durable, which embeds the same server.
 
-Status: in development (plan MA1, Tasks 13–20). This README is the design the following
-tasks implement; until then the exported classes are skeletons. Not published to npm.
+Status: preview. Not published to npm yet.
 
 ## Usage
 
