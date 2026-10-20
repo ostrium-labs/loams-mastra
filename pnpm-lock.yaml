@@ -93,8 +93,8 @@ importers:
         specifier: 24.19.2
         version: 24.19.2
       tsdown:
-        specifier: 0.22.9
-        version: 0.22.9(tsx@4.23.15)(typescript@5.9.3)
+        specifier: 0.22.14
+        version: 0.22.14(tsx@4.23.15)(typescript@5.9.3)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -118,8 +118,8 @@ importers:
         specifier: 24.19.2
         version: 24.19.2
       tsdown:
-        specifier: 0.22.9
-        version: 0.22.9(tsx@4.23.15)(typescript@5.9.3)
+        specifier: 0.22.14
+        version: 0.22.14(tsx@4.23.15)(typescript@5.9.3)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -3016,14 +3016,14 @@ packages:
   trough@2.2.0:
     resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
 
-  tsdown@0.22.9:
-    resolution: {integrity: sha512-/0QEjQEhOU1t1YxOIAGzFN7bIssd8P0pBpkOmNLCQi3c5UtrcMF5bvq3f30xHJNW9QCA9aUNcNAorMr2CTd6Lg==}
+  tsdown@0.22.14:
+    resolution: {integrity: sha512-ule7Y+fsAN2iZbLDoo7C4KYljFJNJJ+fLshyn+9gozeTspVersWHxwdGB+Dm2hzA38s6muFnUTl0jK3vJm9ifQ==}
     engines: {node: ^22.18.0 || >=24.11.0}
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
-      '@tsdown/css': 0.22.9
-      '@tsdown/exe': 0.22.9
+      '@tsdown/css': 0.22.14
+      '@tsdown/exe': 0.22.14
       '@vitejs/devtools': '*'
       publint: ^0.3.8
       tsx: '*'
@@ -3131,6 +3131,10 @@ packages:
   uuid@11.1.1:
     resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
+
+  verkit@0.3.2:
+    resolution: {integrity: sha512-zj/ob3UsvJGN0whEAKFp53REA5X66hvffVqoCtVQAakJKnKlH+/PcOfMoFwIG/o4rElqLv/ycAFlx8ZlXUorCg==}
+    engines: {node: '>=18.12.0'}
 
   verkit@0.5.0:
     resolution: {integrity: sha512-u4J1hr6Y+C/hit34GwL3eIcUf3wngT8TlYUjK7tk0jxydKLAq3sYvifjdTDA6U3KCKRcQCQDGf/srjxfZF3l7g==}
@@ -6219,7 +6223,7 @@ snapshots:
 
   trough@2.2.0: {}
 
-  tsdown@0.22.9(tsx@4.23.15)(typescript@5.9.3):
+  tsdown@0.22.14(tsx@4.23.15)(typescript@5.9.3):
     dependencies:
       ansis: 4.4.0
       cac: 7.1.0
@@ -6231,11 +6235,11 @@ snapshots:
       picomatch: 4.0.7
       rolldown: 1.2.14
       rolldown-plugin-dts: 0.27.14(rolldown@1.2.14)(typescript@5.9.3)
-      semver: 7.8.5
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
       tree-kill: 1.2.2
       unconfig-core: 7.5.0
+      verkit: 0.3.2
     optionalDependencies:
       tsx: 4.23.15
       typescript: 5.9.3
@@ -6323,6 +6327,8 @@ snapshots:
   util-deprecate@1.0.2: {}
 
   uuid@11.1.1: {}
+
+  verkit@0.3.2: {}
 
   verkit@0.5.0: {}
 

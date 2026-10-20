@@ -35,7 +35,7 @@
     "@mastra/core": "1.78.0",
     "@mastra/libsql": "1.26.2",
     "@types/node": "24.19.2",
-    "tsdown": "0.22.9",
+    "tsdown": "0.22.14",
     "typescript": "5.9.3",
     "vitest": "4.1.11",
     "zod": "4.6.5"
