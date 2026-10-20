@@ -78,4 +78,7 @@ SDKs encode values (`new Codec().encode(value)` in `@resonatehq/sdk`):
 { "resumeId": "approval-7f3c", "step": "approve", "resumeData": { "approved": true } }
 ```
 
-The promise settles once. A second resume of the same suspension is refused.
+The promise settles once. A second resume of the same suspension is refused. A request may also
+carry `suspendedAt`, the step's `suspendedAt` in the snapshot the caller read; the run then
+rejects the request if that suspension was already resumed, for example when a looping step
+has since suspended again.
