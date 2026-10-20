@@ -20,6 +20,8 @@ describe.skipIf(!hasServer)(`Resonate backend (${RESONATE_BACKEND})`, () => {
       await resonate.promises.resolve(id, codec.encode({ ok: true }));
       const read = await resonate.promises.get(id);
       expect(read.state).toBe('resolved');
+      // Servers may add their own tags; ours must come back unchanged.
+      expect(read.tags).toMatchObject(tags);
       expect(codec.decode(read.value as any)).toEqual({ ok: true });
     } finally {
       await resonate.stop();
