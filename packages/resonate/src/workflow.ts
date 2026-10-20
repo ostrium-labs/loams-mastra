@@ -425,8 +425,8 @@ export class ResonateWorkflow<
         }
       }
 
-      // Persist the final snapshot before publishing workflow-finish, so a reader
-      // woken by the event sees the final state.
+      // The final snapshot. Events match the default engine's: a stream's
+      // workflow-finish comes from core's Run when the result arrives.
       if (
         this.options.shouldPersistSnapshot({
           workflowStatus: result.status,
@@ -477,23 +477,6 @@ export class ResonateWorkflow<
               : finalSnapshot,
           });
         }
-      }
-
-      try {
-        await pubsub.publish(`workflow.events.v2.${runId}`, {
-          type: 'watch',
-          runId,
-          data: {
-            type: 'workflow-finish',
-            payload: {
-              status: result.status,
-              result: result.status === 'success' ? result.result : undefined,
-              error: result.status === 'failed' ? result.error : undefined,
-            },
-          },
-        });
-      } catch (publishError) {
-        this.logger.debug?.('Failed to publish workflow-finish event:', publishError);
       }
     });
 
