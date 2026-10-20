@@ -1,14 +1,15 @@
 {
   "name": "@loams/mastra-resonate",
   "version": "0.0.0",
-  "private": true,
+  "private": false,
   "description": "Run Mastra workflows durably on any Resonate server (Loams Durable included)",
   "license": "Apache-2.0",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "NOTICE"
   ],
   "exports": {
     ".": {
@@ -29,7 +30,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@resonatehq/sdk": "0.11.5"
+    "@resonatehq/sdk": "^0.11.5"
   },
   "devDependencies": {
     "@mastra/core": "1.78.0",
@@ -53,5 +54,9 @@
   "bugs": "https://github.com/ostrium-labs/loams-mastra/issues",
   "engines": {
     "node": ">=22.13.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }

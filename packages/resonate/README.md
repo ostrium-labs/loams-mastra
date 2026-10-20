@@ -9,7 +9,11 @@ package is a Mastra execution engine for it, laid out like Mastra's own
 against the upstream Resonate server and against [Loams](https://github.com/ostrium-labs/loams)
 Durable, which embeds the same server.
 
-Status: preview. Not published to npm yet.
+Status: preview.
+
+```sh
+npm install @loams/mastra-resonate @resonatehq/sdk
+```
 
 ## Usage
 

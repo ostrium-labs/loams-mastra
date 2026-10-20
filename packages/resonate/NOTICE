@@ -1,0 +1,22 @@
+Loams for Mastra
+Copyright 2026 The Loams Authors
+
+This product includes software developed by The Loams Authors.
+
+Portions of this product are derived from Mastra (https://github.com/mastra-ai/mastra),
+Copyright (c) 2025 Kepler Software, Inc., licensed under the Apache License 2.0.
+Each derived file names its source commit and path in its first line, and the
+vendored directories are listed in test/conformance/upstream/*/UPSTREAM.json.
+The vendored directories are:
+  test/conformance/upstream/mastra-pg@1.31.2/          (mastra-ai/mastra@6a465f9d1da730e179c44bfb4ef3e6ec398ba81f)
+  test/conformance/upstream/mastra-qdrant@1.1.4/        (mastra-ai/mastra@8b35a6c1d6148b24aea94a5d0493d7d7f3c7a5d5)
+  test/conformance/upstream/mastra-elasticsearch@1.4.4/ (mastra-ai/mastra@81299c921d6f499d4c62f14c38e4d4d88b4fbfae)
+Nothing in this product is taken from Mastra's ee/ directories (Mastra Enterprise
+Edition License) or from Elastic-2.0 code.
+
+Some Mastra packages omit a "license" field in package.json; Mastra's root
+LICENSE.md licenses them under Apache-2.0.
+
+Portions of packages/resonate may be derived from the Resonate SDKs
+(https://github.com/resonatehq), Copyright Resonate HQ, Inc., licensed under the
+Apache License 2.0. Each derived file names its source in its first line.
