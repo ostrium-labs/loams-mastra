@@ -484,13 +484,4 @@ function compact(result: WorkflowResult<any, any, any, any>): Record<string, unk
     default:
       return { status: result.status, state: result.state };
   }
-
-  /**
-   * Refuses to create runs until the Resonate engine is wired (Task 15): the
-   * inherited implementation would run on Mastra's default engine, without
-   * Resonate's durability.
-   */
-  override async createRun(): Promise<never> {
-    throw new Error('@loams/mastra-resonate: not implemented yet (TODO(Task 15))');
-  }
 }
