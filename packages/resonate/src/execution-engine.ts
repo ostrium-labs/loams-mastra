@@ -351,6 +351,7 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
 
     const {
       step,
+      stepResults,
       executionContext,
       resume,
       timeTravel,
@@ -361,14 +362,6 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
       perStep,
       actor,
     } = params;
-    if (resume?.steps?.length) {
-      throw new MastraNonRetryableError({
-        id: 'RESONATE_ENGINE_NESTED_RESUME_UNSUPPORTED',
-        domain: 'MASTRA_WORKFLOW',
-        category: 'USER',
-        text: 'Resuming a nested workflow is not supported by @loams/mastra-resonate yet.',
-      } as any);
-    }
     if (timeTravel && timeTravel.steps?.length > 1 && timeTravel.steps[0] === step.id) {
       throw new MastraNonRetryableError({
         id: 'RESONATE_ENGINE_TIME_TRAVEL_UNSUPPORTED',
@@ -379,12 +372,48 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
     }
 
     const requestContext = params.requestContext as RequestContext | undefined;
-    const runId =
+    // Nested runs use the parent's run id, as the default engine does, with a
+    // per-index suffix inside foreach so concurrent iterations keep separate snapshots.
+    const derivedRunId =
       executionContext.foreachIndex !== undefined
         ? `${executionContext.runId}-foreach-${executionContext.foreachIndex}`
         : executionContext.runId;
+    const isResume = !!resume?.steps?.length && resume.steps[0] === step.id;
+    const runId: string = isResume
+      ? ((stepResults[step.id] as any)?.suspendPayload?.__workflow_meta?.runId ?? derivedRunId)
+      : derivedRunId;
+
+    let nestedResume: InvocationPayload['resume'];
+    if (isResume) {
+      // Which nested step to resume: the rest of the caller's path, or the
+      // nested run's only suspended step.
+      nestedResume = await this.wrapDurableOperation(
+        `workflow.${executionContext.workflowId}.step.${step.id}.nested-resume`,
+        async () => {
+          const store = await this.mastra?.getStorage()?.getStore('workflows');
+          const snapshot: any = await store?.loadWorkflowSnapshot({ workflowName: step.id, runId });
+          const nestedSteps = resume!.steps.slice(1);
+          if (nestedSteps.length === 0) {
+            const suspendedStepIds = Object.keys(snapshot?.suspendedPaths ?? {});
+            if (suspendedStepIds.length > 1) {
+              throw new Error(
+                `Multiple suspended steps found: ${suspendedStepIds.map((id) => `[${id}]`).join(', ')}. ` +
+                  'Please specify which step to resume using the "step" parameter.',
+              );
+            }
+            if (suspendedStepIds[0]) nestedSteps.push(suspendedStepIds[0]);
+          }
+          return {
+            steps: nestedSteps,
+            resumePayload: resume!.resumePayload,
+            resumePath: nestedSteps[0] ? snapshot?.suspendedPaths?.[nestedSteps[0]] : undefined,
+          };
+        },
+      );
+    }
+
     const payload: InvocationPayload = {
-      kind: 'start',
+      kind: isResume ? 'resume' : 'start',
       role: 'pass',
       workflowId: step.id,
       runId,
@@ -395,6 +424,7 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
       outputOptions: { includeState: true, includeResumeLabels: true },
       perStep,
       actor,
+      ...(nestedResume ? { resume: nestedResume } : {}),
       nested: {
         compact: true,
         tracing: executionContext.tracingIds?.traceId
@@ -524,8 +554,8 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
       ...res.result,
       startedAt,
       payload: inputData,
-      resumedAt: undefined,
-      resumePayload: undefined,
+      resumedAt: isResume ? startedAt : undefined,
+      resumePayload: isResume ? resume?.resumePayload : undefined,
     } as StepResult<any, any, any, any>;
   }
 }

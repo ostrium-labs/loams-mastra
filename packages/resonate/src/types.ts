@@ -73,8 +73,25 @@ export type ResonateWorkflowConfig<
  * What a run's root durable function receives. One shape for the first
  * invocation and for nested workflows; resume and time travel add fields.
  */
+/**
+ * The value that settles a run's resume promise. `run.resume()` writes it;
+ * any Resonate client may write one to resume a run from outside Mastra.
+ */
+export interface ResumeRequest {
+  /** Unique per resume call; tells the caller whose request settled the promise. */
+  resumeId: string;
+  resumeData?: unknown;
+  /** A step id, a dotted path or a list of step ids into nested workflows. */
+  step?: string | string[];
+  label?: string;
+  requestContext?: Record<string, unknown>;
+  actor?: unknown;
+  perStep?: boolean;
+  forEachIndex?: number;
+}
+
 export interface InvocationPayload {
-  kind: 'start';
+  kind: 'start' | 'resume';
   /**
    * `root` is the run's root promise, which dispatches each pass and waits for
    * it; `pass` executes the graph. Nested workflows run as `pass` directly.
@@ -92,6 +109,10 @@ export interface InvocationPayload {
   format?: 'legacy' | 'vnext';
   perStep?: boolean;
   actor?: unknown;
+  /** A resume of the top-level run: the request that settled its resume promise. */
+  resumeRequest?: ResumeRequest;
+  /** A resume of a nested run, resolved by the parent. */
+  resume?: { steps: string[]; resumePayload: unknown; resumePath?: number[] };
   /** Set when a parent workflow invokes this one as a nested step. */
   nested?: { compact: boolean; tracing?: { traceId: string; parentSpanId?: string } };
 }
@@ -105,9 +126,22 @@ export function rootIdForRun(runId: string): string {
   return runId.replace(/%/g, '%25').replace(/:/g, '%3A');
 }
 
+/**
+ * A run's root promise alternates two kinds of children: pass `k` at
+ * `<root>:2k` (a global promise, the run's k-th execution) and, after a pass
+ * that suspended, the resume promise at `<root>:2k+1`.
+ */
+export function passId(rootId: string, k: number): string {
+  return `${rootId}:${2 * k}`;
+}
+
+export function resumePromiseId(rootId: string, k: number): string {
+  return `${rootId}:${2 * k + 1}`;
+}
+
 /** The durable promise that holds a run's first pass (the root's first child). */
 export function firstPassId(rootId: string): string {
-  return `${rootId}:0`;
+  return passId(rootId, 0);
 }
 
 /** Resonate durable promise states at protocol 2026-04-01 (`@resonatehq/sdk` 0.11.5). */

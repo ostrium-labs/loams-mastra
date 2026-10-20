@@ -125,7 +125,7 @@ engine.
 
 ## Parity with `@mastra/inngest`
 
-| Feature | `@mastra/inngest` | This engine (suspend and resume arrive in Task 18, streaming parity in Task 19) |
+| Feature | `@mastra/inngest` | This engine (streaming parity arrives in Task 19) |
 |---|---|---|
 | start, `startAsync`, result | yes | yes |
 | Step memoisation and crash recovery | yes | yes (tested with `kill -9` of the worker, and of the server) |

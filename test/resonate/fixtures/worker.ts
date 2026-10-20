@@ -55,6 +55,26 @@ const step3 = createStep({
   },
 });
 
+const approve = createStep({
+  id: 'approve',
+  inputSchema: num,
+  outputSchema: num,
+  resumeSchema: z.object({ approved: z.boolean() }),
+  execute: async ({ inputData, resumeData, suspend }) => {
+    if (!resumeData) {
+      log(`approve-suspend:${process.pid}`);
+      return suspend({});
+    }
+    log(`approve:${process.pid}`);
+    return { value: resumeData.approved ? inputData.value * 10 : 0 };
+  },
+});
+const approval = createWorkflow({ id: 'approval', inputSchema: num, outputSchema: num })
+  .then(step1)
+  .then(approve)
+  .then(step3)
+  .commit();
+
 const crashy = createWorkflow({ id: 'crashy', inputSchema: num, outputSchema: num })
   .then(step1)
   .then(step2)
@@ -62,18 +82,22 @@ const crashy = createWorkflow({ id: 'crashy', inputSchema: num, outputSchema: nu
   .commit();
 
 const mastra = new Mastra({
-  workflows: { crashy },
+  workflows: { crashy, approval },
   storage: new LibSQLStore({ id: 'crash-store', url: DB_URL }),
   logger: false,
 });
 
 log(`ready:${process.pid}`);
-const WORKFLOW = (process.env.WORKFLOW ?? 'crashy') as 'crashy';
+const WORKFLOW = (process.env.WORKFLOW ?? 'crashy') as 'crashy' | 'approval';
 const summary = (result: { status: string }) =>
   JSON.stringify({ status: result.status, result: 'result' in result ? result.result : undefined });
 if (MODE === 'start') {
   const run = await mastra.getWorkflow(WORKFLOW).createRun({ runId: RUN_ID });
   const result = await run.start({ inputData: { value: 1 } });
+  log(`result:${process.pid}:${summary(result)}`);
+} else if (MODE === 'resume') {
+  const run = await mastra.getWorkflow(WORKFLOW).createRun({ runId: RUN_ID });
+  const result = await run.resume({ step: 'approve', resumeData: { approved: true } });
   log(`result:${process.pid}:${summary(result)}`);
 }
 // Stay alive as a worker until killed.

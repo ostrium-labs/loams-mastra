@@ -16,14 +16,16 @@ import type {
 } from '@mastra/core/workflows';
 import { getEntryWorkflow, isSingleStepEntry, Workflow } from '@mastra/core/workflows';
 import type { Context, Resonate } from '@resonatehq/sdk/async';
-import { decodeValue, encodeValue } from './codec';
+import { decodeValue, encodeError, encodeValue } from './codec';
 import { currentContext, durable, ResonateExecutionEngine, withContext } from './execution-engine';
+import { resolveResumeSteps, validateWithSchema } from './resume';
 import { ResonateRun } from './run';
 import type {
   InvocationPayload,
   ResolvedEngineConfig,
   ResonateEngineType,
   ResonateWorkflowConfig,
+  ResumeRequest,
 } from './types';
 
 /** Workflows registered on each Resonate client, by workflow id. */
@@ -230,19 +232,39 @@ export class ResonateWorkflow<
     if (payload.role === 'pass') {
       return encodeValue(await this.runInvocation(ctx, payload));
     }
-    return ctx.rpc(
-      this.id,
-      encodeValue({ ...payload, role: 'pass' }),
-      ctx.options({
-        target: this.#config.group,
+    const tags = { 'mastra:workflowId': this.id, 'mastra:runId': payload.runId };
+    let pass: InvocationPayload = { ...payload, role: 'pass' };
+    for (let k = 0; ; k++) {
+      const encoded = await ctx.rpc(
+        this.id,
+        encodeValue(pass),
+        ctx.options({
+          target: this.#config.group,
+          timeout: this.#config.timeout,
+          tags: { ...tags, 'mastra:op': `pass:${k}` },
+        }),
+      );
+      if (decodeValue<{ status?: string }>(encoded)?.status !== 'suspended') return encoded;
+
+      // Suspended: wait, durably, for whoever resumes the run to settle this
+      // promise with a ResumeRequest. It is a plain Resonate promise, so a
+      // client outside Mastra may settle it too.
+      const request = await ctx.promise<unknown>({
         timeout: this.#config.timeout,
-        tags: {
-          'mastra:op': `pass:${payload.kind}`,
-          'mastra:workflowId': this.id,
-          'mastra:runId': payload.runId,
-        },
-      }),
-    );
+        tags: { ...tags, 'mastra:op': `resume:${k}` },
+      });
+      pass = {
+        kind: 'resume',
+        role: 'pass',
+        workflowId: this.id,
+        runId: payload.runId,
+        resourceId: payload.resourceId,
+        requestContext: {},
+        outputOptions: payload.outputOptions,
+        format: payload.format,
+        resumeRequest: decodeValue<ResumeRequest>(request),
+      };
+    }
   }
 
   /**
@@ -259,10 +281,32 @@ export class ResonateWorkflow<
 
   async #runInvocation(payload: InvocationPayload) {
     const mastra = this.#mastra;
-    const { runId, resourceId, inputData, outputOptions, perStep, format } = payload;
-    const initialState = payload.initialState as any;
+    const { runId, resourceId, outputOptions, format } = payload;
+    let { inputData, perStep } = payload;
+    let initialState = payload.initialState as any;
+    let requestContextEntries = payload.requestContext ?? {};
+    let actor = payload.actor;
+    let resume: any;
+
+    if (payload.kind === 'resume') {
+      const prepared = await durable(
+        `workflow.${this.id}.resume.prepare`,
+        this.#config.timeout,
+        () => this.#prepareResume(payload),
+      );
+      if ('rejected' in prepared) {
+        // The run stays suspended; the caller gets the reason.
+        return { ...prepared.suspended, resumeRejected: prepared.rejected };
+      }
+      resume = prepared.resume;
+      initialState = prepared.state;
+      inputData = prepared.input;
+      requestContextEntries = prepared.requestContext;
+      actor = payload.resumeRequest?.actor ?? actor;
+      perStep = payload.resumeRequest?.perStep ?? perStep;
+    }
     const requestContext = new RequestContext<any>(
-      Object.entries(payload.requestContext ?? {}) as [string, any][],
+      Object.entries(requestContextEntries) as [string, any][],
     );
     const pubsub = mastra?.pubsub;
     if (!pubsub) {
@@ -313,7 +357,8 @@ export class ResonateWorkflow<
         pubsub,
         retryConfig: this.retryConfig,
         requestContext,
-        actor: payload.actor as any,
+        actor: actor as any,
+        resume,
         perStep,
         format,
         abortController: new AbortController(),
@@ -462,6 +507,103 @@ export class ResonateWorkflow<
     }
 
     return payload.nested?.compact ? compact(result) : result;
+  }
+
+  /**
+   * Turns a resume into the engine's resume parameters, from the run's
+   * snapshot: the step path (label, step or the only suspended step), the
+   * validated resume data, the request context (snapshot values, overridden by
+   * the request's), and the state and step results to resume from. Runs once per
+   * pass, memoised. A request that cannot resume the run is rejected without
+   * executing anything.
+   */
+  async #prepareResume(payload: InvocationPayload): Promise<
+    | {
+        resume: {
+          steps: string[];
+          stepResults: Record<string, any>;
+          resumePayload: unknown;
+          resumePath: number[];
+          forEachIndex?: number;
+          label?: string;
+        };
+        state: unknown;
+        input: unknown;
+        requestContext: Record<string, unknown>;
+      }
+    | { rejected: unknown; suspended: Record<string, unknown> }
+  > {
+    const workflowsStore = await this.#mastra?.getStorage()?.getStore('workflows');
+    if (!workflowsStore)
+      throw new Error(`@loams/mastra-resonate: resuming workflow "${this.id}" needs storage`);
+    const snapshot = await workflowsStore.loadWorkflowSnapshot({
+      workflowName: this.id,
+      runId: payload.runId,
+    });
+    if (!snapshot)
+      throw new Error(`No snapshot found for this workflow run: ${this.id} ${payload.runId}`);
+
+    let steps: string[];
+    let resumePayload: unknown;
+    let requestContext: Record<string, unknown> = { ...((snapshot as any).requestContext ?? {}) };
+    const request = payload.resumeRequest;
+    if (payload.resume) {
+      steps = payload.resume.steps;
+      resumePayload = payload.resume.resumePayload;
+      requestContext = { ...requestContext, ...payload.requestContext };
+    } else {
+      try {
+        steps = resolveResumeSteps(snapshot, { step: request?.step, label: request?.label });
+        const suspendedStep = this.steps[steps[0] ?? ''];
+        resumePayload =
+          this.options.validateInputs && suspendedStep?.resumeSchema
+            ? await validateWithSchema(
+                suspendedStep.resumeSchema,
+                request?.resumeData,
+                'resume data',
+              )
+            : request?.resumeData;
+      } catch (e) {
+        return {
+          rejected: encodeError(e),
+          suspended: {
+            status: snapshot.status,
+            steps: snapshot.context,
+            state: snapshot.value,
+            resumeLabels: snapshot.resumeLabels,
+          },
+        };
+      }
+      requestContext = { ...requestContext, ...(request?.requestContext ?? {}) };
+    }
+
+    await workflowsStore.persistWorkflowSnapshot({
+      workflowName: this.id,
+      runId: payload.runId,
+      resourceId: payload.resourceId,
+      snapshot: {
+        ...snapshot,
+        status: 'running',
+        result: undefined,
+        error: undefined,
+        timestamp: Date.now(),
+      } as any,
+    });
+
+    return {
+      resume: {
+        steps,
+        stepResults: snapshot.context as Record<string, any>,
+        resumePayload,
+        resumePath: (payload.resume?.resumePath ??
+          snapshot.suspendedPaths?.[steps[0] ?? '']) as number[],
+        ...(request?.forEachIndex !== undefined ? { forEachIndex: request.forEachIndex } : {}),
+        ...(request?.label ? { label: request.label } : {}),
+      },
+      state: snapshot.value,
+      input: (snapshot.context as Record<string, any>)?.input,
+      requestContext,
+    };
   }
 }
 

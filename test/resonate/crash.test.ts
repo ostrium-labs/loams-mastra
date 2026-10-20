@@ -153,4 +153,51 @@ describe.skipIf(!hasServer)('crash and resume', () => {
     },
     120_000,
   );
+
+  it('resume_after_worker_restart', async () => {
+    mkdirSync(workDir, { recursive: true });
+    const id = uniqueId('resume');
+    const env = {
+      RESONATE_URL,
+      GROUP: id,
+      DB_URL: `file:${join(workDir, `${id}.db`)}`,
+      RUN_ID: id,
+      GATE: join(workDir, `${id}.gate`),
+      EVENTS: join(workDir, `${id}.events`),
+      WORKFLOW: 'approval',
+    };
+    try {
+      const first = startWorker({ ...env, MODE: 'start' });
+      await waitFor(
+        () => events(env.EVENTS).some((e) => e === `result:${first.pid}:{"status":"suspended"}`),
+        20_000,
+        'the run to suspend',
+      );
+      first.kill('SIGKILL');
+      await new Promise((r) => first.once('exit', r));
+
+      const second = startWorker({ ...env, MODE: 'resume' });
+      await waitFor(
+        () => events(env.EVENTS).some((e) => e.startsWith(`result:${second.pid}:`)),
+        30_000,
+        'the resume to finish',
+      );
+      const line = events(env.EVENTS).find((e) => e.startsWith(`result:${second.pid}:`))!;
+      expect(JSON.parse(line.slice(line.indexOf('{')))).toEqual({
+        status: 'success',
+        result: { value: 25 },
+      });
+
+      const log = events(env.EVENTS);
+      expect(log.filter((e) => e.startsWith('step1:'))).toEqual([`step1:${first.pid}`]);
+      expect(log.filter((e) => e.startsWith('approve-suspend:'))).toEqual([
+        `approve-suspend:${first.pid}`,
+      ]);
+      expect(log.filter((e) => e.startsWith('approve:'))).toEqual([`approve:${second.pid}`]);
+      expect(log.filter((e) => e.startsWith('step3:'))).toEqual([`step3:${second.pid}`]);
+    } finally {
+      for (const suffix of ['.db', '.db-shm', '.db-wal', '.gate', '.events'])
+        rmSync(join(workDir, `${id}${suffix}`), { force: true });
+    }
+  });
 });
