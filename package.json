@@ -8,8 +8,8 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "build": "pnpm -r --filter ./packages/* build",
-    "test": "pnpm -r --filter ./packages/* --filter ./scripts test",
+    "build": "pnpm -r --filter './packages/*' build",
+    "test": "pnpm -r --filter './packages/*' --filter ./scripts test",
     "typecheck": "pnpm -r typecheck",
     "lint": "biome check .",
     "format": "biome check --write .",

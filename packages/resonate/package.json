@@ -1,0 +1,57 @@
+{
+  "name": "@loams/mastra-resonate",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Run Mastra workflows durably on any Resonate server (Loams Durable included)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown --config tsdown.config.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@resonatehq/sdk": "0.11.5"
+  },
+  "devDependencies": {
+    "@mastra/core": "1.78.0",
+    "@mastra/libsql": "1.26.2",
+    "@types/node": "24.19.2",
+    "tsdown": "0.22.9",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11",
+    "zod": "4.6.5"
+  },
+  "peerDependencies": {
+    "@mastra/core": ">=1.78.0-0 <2.0.0-0",
+    "zod": "^3.25.0 || ^4.0.0"
+  },
+  "homepage": "https://github.com/ostrium-labs/loams-mastra/tree/main/packages/resonate#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ostrium-labs/loams-mastra.git",
+    "directory": "packages/resonate"
+  },
+  "bugs": "https://github.com/ostrium-labs/loams-mastra/issues",
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}
