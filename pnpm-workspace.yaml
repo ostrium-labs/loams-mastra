@@ -1,0 +1,12 @@
+packages:
+  - packages/*
+  - examples/*
+  - templates/*
+  - test/*
+
+# Supply-chain guards (the 2026-06 @mastra/* npm compromise):
+# - every dependency is saved with an exact version (also in .npmrc);
+# - a release must be three days old before pnpm resolves it, so a
+#   compromised version is usually yanked before it can reach the lockfile.
+saveExact: true
+minimumReleaseAge: 4320

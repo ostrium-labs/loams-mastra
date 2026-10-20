@@ -1,0 +1,18 @@
+{
+  "name": "@loams/mastra",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Loams for Mastra: storage, vectors, memory and workflow persistence on one Loams backend (placeholder; no code yet).",
+  "license": "Apache-2.0",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ostrium-labs/loams-mastra.git",
+    "directory": "packages/mastra"
+  },
+  "homepage": "https://loams.dev",
+  "bugs": "https://github.com/ostrium-labs/loams-mastra/issues",
+  "engines": {
+    "node": ">=22"
+  }
+}

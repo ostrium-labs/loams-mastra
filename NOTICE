@@ -1,0 +1,32 @@
+Loams × Mastra
+Copyright 2026 Ostrium Labs and the Loams × Mastra contributors.
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes or adapts software developed by third parties, listed below with
+their licences. Every adapted file carries a header naming its source and stating that it
+was changed.
+
+--------------------------------------------------------------------------------
+Mastra
+https://github.com/mastra-ai/mastra
+Copyright (c) 2025 Kepler Software, Inc.
+Licensed under the Apache License, Version 2.0.
+
+Nothing from Mastra is included yet. Planned: test suites adapted from
+stores/_test-utils (@internal/storage-test-utils, not published to npm) and the
+adapter tests of stores/pg and stores/qdrant, at a pinned commit. Nothing is ever
+taken from Mastra's ee/ directories (Mastra Enterprise Edition License) or from the
+Elastic-2.0 provider code in packages/connect.
+
+Some Mastra packages omit the "license" field from package.json (for example
+@mastra/elasticsearch); Mastra's root LICENSE.md covers them as Apache-2.0.
+
+--------------------------------------------------------------------------------
+Resonate
+https://github.com/resonatehq
+Copyright (c) Resonate HQ, Inc.
+Licensed under the Apache License, Version 2.0.
+
+Nothing from Resonate is included yet. Planned: packages/resonate, a Mastra workflow
+engine on Loams Durable (Resonate), which may adapt code from the Resonate SDKs.
