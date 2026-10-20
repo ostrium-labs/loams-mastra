@@ -4,9 +4,12 @@
 //                                (*.ts.net) or documentation hosts;
 //   examples_pin_exact_versions  @mastra/*, @loams/*, @qdrant/* and @resonatehq/* are exact
 //                                versions in examples/*/package.json and templates/*/package.json;
-//   no_secret_in_artifacts       no lk_ API key in a directory of logs or reports.
+//   no_secret_in_artifacts       no lk_ API key in a directory of logs or reports;
+//   no_stale_expected_failures   no expected-failure entry fixed in a Loams release at or
+//                                before the pinned one (its `fixedAfter` is older than
+//                                pins.json loams.version), and `fixedBy` names a Loams PR.
 //
-//   node scripts/repo-checks.mjs [root]                 the first two, on the repository
+//   node scripts/repo-checks.mjs [root]                 all but the third, on the repository
 //   node scripts/repo-checks.mjs --artifacts <dir>...   the third, on uploaded artifacts
 
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -145,6 +148,42 @@ export function noSecretInArtifacts(dir) {
   return problems;
 }
 
+/** -1, 0 or 1 for two `x.y.z` versions; null otherwise. */
+function compareVersions(a, b) {
+  const parse = (v) => /^v?(\d+)\.(\d+)\.(\d+)$/.exec(String(v))?.slice(1).map(Number);
+  const x = parse(a);
+  const y = parse(b);
+  if (!x || !y) return null;
+  for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] < y[i] ? -1 : 1;
+  return 0;
+}
+
+const LOAMS_PR = /^https:\/\/github\.com\/ostrium-labs\/loams(?:-postgres)?\/pull\/\d+$/;
+
+/** @param {string} root @returns {string[]} problems */
+export function noStaleExpectedFailures(root) {
+  const dir = join(root, 'test', 'conformance', 'expected-failures');
+  const pinsFile = join(root, 'test', 'conformance', 'pins.json');
+  if (!existsSync(dir) || !existsSync(pinsFile)) return [];
+  const pinned = JSON.parse(readFileSync(pinsFile, 'utf8')).loams?.version;
+  const problems = [];
+  for (const f of readdirSync(dir).filter((n) => n.endsWith('.json'))) {
+    for (const e of JSON.parse(readFileSync(join(dir, f), 'utf8'))) {
+      if (e.fixedAfter === undefined) continue;
+      const where = `no_stale_expected_failures: ${f}: ${e.test}`;
+      const order = compareVersions(e.fixedAfter, pinned);
+      if (order === null) problems.push(`${where}: fixedAfter "${e.fixedAfter}" is not a version`);
+      else if (order < 0)
+        problems.push(
+          `${where}: fixed after ${e.fixedAfter}, and Loams ${pinned} is pinned; remove it`,
+        );
+      if (!LOAMS_PR.test(e.fixedBy ?? ''))
+        problems.push(`${where}: fixedBy must name the Loams PR`);
+    }
+  }
+  return problems;
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   let problems;
@@ -152,7 +191,11 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     problems = args.slice(1).flatMap((d) => noSecretInArtifacts(d));
   } else {
     const root = args[0] ?? fileURLToPath(new URL('..', import.meta.url));
-    problems = [...noPublicEndpoints(root), ...examplesPinExactVersions(root)];
+    problems = [
+      ...noPublicEndpoints(root),
+      ...examplesPinExactVersions(root),
+      ...noStaleExpectedFailures(root),
+    ];
   }
   for (const p of problems) console.error(p);
   if (problems.length > 0) process.exit(1);

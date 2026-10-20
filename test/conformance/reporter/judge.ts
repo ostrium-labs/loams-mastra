@@ -12,6 +12,42 @@ export interface ExpectedFailure {
   issue: string;
   /** The date the entry was added, YYYY-MM-DD. */
   since: string;
+  /**
+   * The last Loams release that still fails: the fix has landed on Loams `dev` (in
+   * `fixedBy`). The entry applies only to that release and older ones; against a `dev`
+   * build or a newer release the test must pass, so the gate stays exact on both. Once
+   * pins.json moves past it, the entry is stale and repo-checks asks for its removal.
+   */
+  fixedAfter?: string;
+  /** The Loams pull request with the fix. */
+  fixedBy?: string;
+}
+
+/** `[major, minor, patch]` of a release version, or null for anything else. */
+function semver(v: string): [number, number, number] | null {
+  const m = /^v?(\d+)\.(\d+)\.(\d+)$/.exec(v.trim());
+  return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : null;
+}
+
+/** -1, 0 or 1; null when either is not a release version. */
+export function compareVersions(a: string, b: string): number | null {
+  const x = semver(a);
+  const y = semver(b);
+  if (!x || !y) return null;
+  for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] < y[i] ? -1 : 1;
+  return 0;
+}
+
+/**
+ * Whether `entry` applies to the Loams under test: always without `fixedAfter`; never
+ * against `dev` (a build of the monorepo's dev branch, which has every landed fix) or a
+ * release newer than `fixedAfter`. An unknown version keeps the entry.
+ */
+export function applies(entry: ExpectedFailure, loams: string | undefined): boolean {
+  if (!entry.fixedAfter || !loams || loams === 'unknown') return true;
+  if (loams === 'dev') return false;
+  const order = compareVersions(loams, entry.fixedAfter);
+  return order === null || order <= 0;
 }
 
 export type Outcome = { test: string; state: 'passed' | 'failed' | 'skipped'; error?: string };
@@ -45,7 +81,12 @@ export function redact(text: string): string {
   return text.replace(LK_KEY, 'lk_[redacted]');
 }
 
-export function judge(outcomes: Outcome[], expected: ExpectedFailure[]): Verdict {
+export function judge(
+  outcomes: Outcome[],
+  allExpected: ExpectedFailure[],
+  loams?: string,
+): Verdict {
+  const expected = allExpected.filter((e) => applies(e, loams));
   const listed = new Map(expected.map((e) => [e.test, e]));
   const seen = new Map(outcomes.map((o) => [o.test, o]));
   const failures: Verdict['failures'] = [];

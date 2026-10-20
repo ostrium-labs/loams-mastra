@@ -8,6 +8,7 @@ import {
   examplesPinExactVersions,
   noPublicEndpoints,
   noSecretInArtifacts,
+  noStaleExpectedFailures,
   publicHosts,
 } from './repo-checks.mjs';
 
@@ -64,4 +65,35 @@ test('no_secret_in_artifacts_flags_lk_key', () => {
     'results/ok.json': '{}',
   });
   assert.equal(noSecretInArtifacts(root).length, 1);
+});
+
+test('no_stale_expected_failures', () => {
+  const entries = (fixedAfter, fixedBy = 'https://github.com/ostrium-labs/loams/pull/929') =>
+    JSON.stringify([
+      {
+        test: 'A > open',
+        reason: 'r',
+        issue: 'https://github.com/ostrium-labs/loams/issues/1',
+        since: '2026-10-20',
+      },
+      {
+        test: 'A > fixed',
+        reason: 'r',
+        issue: 'https://github.com/ostrium-labs/loams/issues/2',
+        since: '2026-10-20',
+        fixedAfter,
+        fixedBy,
+      },
+    ]);
+  const root = (version, list) =>
+    fixture({
+      'test/conformance/pins.json': JSON.stringify({ loams: { version } }),
+      'test/conformance/expected-failures/qdrant.json': list,
+    });
+  assert.deepEqual(noStaleExpectedFailures(root('0.1.0', entries('0.1.0'))), []);
+  const stale = noStaleExpectedFailures(root('0.1.1', entries('0.1.0')));
+  assert.equal(stale.length, 1);
+  assert.match(stale[0], /A > fixed: fixed after 0\.1\.0, and Loams 0\.1\.1 is pinned/);
+  assert.equal(noStaleExpectedFailures(root('0.1.0', entries('soon'))).length, 1);
+  assert.equal(noStaleExpectedFailures(root('0.1.0', entries('0.1.0', 'TODO'))).length, 1);
 });

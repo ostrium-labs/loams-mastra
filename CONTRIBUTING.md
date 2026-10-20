@@ -70,6 +70,22 @@ pnpm vendor -- --package @mastra/pg --tag @mastra/pg@<version>
 Update `test/conformance/pins.json` in the same change, rerun the gate, and update the
 expected-failures lists.
 
+## When Loams fixes an expected failure
+
+The expected-failures lists describe the pinned Loams release, so a fix that lands on Loams
+`dev` cannot simply delete an entry: the gate against the release would then fail. Mark the
+entry instead:
+
+```json
+{ "test": "…", "reason": "…", "issue": "https://github.com/ostrium-labs/loams/issues/897",
+  "since": "2026-10-20", "fixedAfter": "0.1.0", "fixedBy": "https://github.com/ostrium-labs/loams/pull/929" }
+```
+
+`fixedAfter` is the last release that still fails. The entry applies to that release and
+older ones only; against a build of Loams `dev` (`LOAMS_VERSION=dev`, as the monorepo's nightly
+Mastra gate runs it) or a newer release, the test must pass. When `pins.json` moves past
+`fixedAfter`, `node scripts/repo-checks.mjs` reports the entry as stale: delete it then.
+
 ## Commits and pull requests
 
 - One change per pull request, into `main`. CI must be green.

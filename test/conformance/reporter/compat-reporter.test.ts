@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import CompatReporter from './compat-reporter.js';
-import type { ExpectedFailure, Outcome } from './judge.js';
+import { applies, type ExpectedFailure, judge, type Outcome } from './judge.js';
 
 const ISSUE = 'https://github.com/ostrium-labs/loams/issues/900';
 
@@ -101,6 +101,29 @@ describe('compat reporter', () => {
     });
     expect(results.notRun).toEqual(['A > not in this cell']);
     expect(written.failures[0]).toMatchObject({ test: 'A > geo', expected: true, issue: ISSUE });
+  });
+
+  it('reporter_applies_fixed_entries_only_to_older_releases', () => {
+    const fixed: ExpectedFailure = {
+      ...entry('A > fixed on dev'),
+      fixedAfter: '0.1.0',
+      fixedBy: 'https://github.com/ostrium-labs/loams/pull/929',
+    };
+    expect(applies(fixed, '0.1.0')).toBe(true);
+    expect(applies(fixed, '0.0.9')).toBe(true);
+    expect(applies(fixed, 'unknown')).toBe(true);
+    expect(applies(fixed, '0.1.1')).toBe(false);
+    expect(applies(fixed, '0.2.0')).toBe(false);
+    expect(applies(fixed, 'dev')).toBe(false);
+    expect(applies(entry('A > open'), 'dev')).toBe(true);
+    const failing: Outcome[] = [{ test: 'A > fixed on dev', state: 'failed', error: '501' }];
+    const passing: Outcome[] = [{ test: 'A > fixed on dev', state: 'passed' }];
+    // The pinned release still fails it; dev must pass it.
+    expect(judge(failing, [fixed], '0.1.0').ok).toBe(true);
+    expect(judge(passing, [fixed], '0.1.0').unexpected.passes).toEqual(['A > fixed on dev']);
+    expect(judge(passing, [fixed], 'dev').ok).toBe(true);
+    expect(judge(failing, [fixed], 'dev').unexpected.failures).toEqual(['A > fixed on dev']);
+    expect(judge(passing, [fixed], 'dev').notRun).toEqual([]);
   });
 
   // End to end: vitest runs a fixture with the reporter in a child process, and the

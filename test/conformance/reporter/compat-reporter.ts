@@ -9,7 +9,8 @@
 //   outputDir            COMPAT_RESULTS_DIR     default test/conformance/results
 //   pinsFile             COMPAT_PINS            default test/conformance/pins.json (optional)
 //   loamsUrl             LOAMS_QDRANT_URL; GET / gives the Qdrant version the gateway reports (optional)
-//   LOAMS_VERSION        the Loams release under test (default: pins.json loams.version)
+//   LOAMS_VERSION        the Loams release under test, or `dev` for a build of Loams dev
+//                        (default: pins.json loams.version); see ExpectedFailure.fixedAfter
 //
 // After the run it prints the verdict, writes results/<suite>.json, and sets the process
 // exit code from the verdict alone: expected failures pass, an unexpected failure, an
@@ -159,12 +160,17 @@ export default class CompatReporter implements Reporter {
     outcomes: Outcome[],
     unhandledErrors: ReadonlyArray<{ message?: string }> = [],
   ): Promise<CompatResults> {
-    const verdict = judge(outcomes, readExpected(this.opts.expectedFailuresDir, this.opts.suite));
+    const versions = readPins(this.opts.pinsFile);
+    const verdict = judge(
+      outcomes,
+      readExpected(this.opts.expectedFailuresDir, this.opts.suite),
+      versions.loams,
+    );
     const unhandled = unhandledErrors.map((e) => redact(e.message ?? String(e)));
     const results: CompatResults = {
       suite: this.opts.suite,
       generatedAt: new Date().toISOString(),
-      versions: readPins(this.opts.pinsFile),
+      versions,
       server: await qdrantCompat(this.opts.loamsUrl),
       run: runUrl(),
       unhandledErrors: unhandled,

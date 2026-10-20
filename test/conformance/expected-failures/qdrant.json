@@ -27,7 +27,9 @@
     "test": "QdrantVector > Filter Queries > Special Cases > handles regex patterns in queries",
     "reason": "its cleanup deletes a payload index: DELETE /collections/{c}/index/{field} answers 501 (MA1 Task 23)",
     "issue": "https://github.com/ostrium-labs/loams/issues/897",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/929"
   },
   {
     "test": "QdrantVector > Filter Queries > Special Cases > handles nested array queries",
@@ -57,12 +59,16 @@
     "test": "QdrantVector Payload Index Operations > deletePayloadIndex > should delete an existing payload index",
     "reason": "DELETE /collections/{c}/index/{field} answers 501 (MA1 Task 23)",
     "issue": "https://github.com/ostrium-labs/loams/issues/897",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/929"
   },
   {
     "test": "QdrantVector Payload Index Operations > deletePayloadIndex > should handle deleting non-existent payload index gracefully",
     "reason": "DELETE /collections/{c}/index/{field} answers 501 (MA1 Task 23)",
     "issue": "https://github.com/ostrium-labs/loams/issues/897",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/929"
   }
 ]
