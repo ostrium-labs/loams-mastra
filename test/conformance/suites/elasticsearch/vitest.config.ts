@@ -9,7 +9,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const suite = process.env.COMPAT_SUITE ?? 'elasticsearch';
 
 export default defineConfig({
-  root: resolve(here, '../../upstream/mastra-elasticsearch@1.4.4/stores/elasticsearch'),
+  // The nightly latest/alpha cells vendor other tags and point COMPAT_ES_DIR at them.
+  root:
+    process.env.COMPAT_ES_DIR ??
+    resolve(here, '../../upstream/mastra-elasticsearch@1.4.4/stores/elasticsearch'),
   test: {
     name: `conformance:${suite}`,
     environment: 'node',

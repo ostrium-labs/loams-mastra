@@ -11,7 +11,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const suite = process.env.COMPAT_SUITE ?? 'pg';
 
 export default defineConfig({
-  root: resolve(here, '../../upstream/mastra-pg@1.31.2/stores/pg'),
+  // The nightly latest/alpha cells vendor other tags and point COMPAT_PG_DIR at them.
+  root: process.env.COMPAT_PG_DIR ?? resolve(here, '../../upstream/mastra-pg@1.31.2/stores/pg'),
   test: {
     name: `conformance:${suite}`,
     environment: 'node',

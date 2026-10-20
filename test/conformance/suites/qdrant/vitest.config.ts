@@ -7,7 +7,10 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const store = resolve(here, '../../upstream/mastra-qdrant@1.1.4/stores/qdrant');
+// The nightly latest/alpha cells vendor other tags and point COMPAT_QDRANT_DIR at them.
+const store =
+  process.env.COMPAT_QDRANT_DIR ??
+  resolve(here, '../../upstream/mastra-qdrant@1.1.4/stores/qdrant');
 const realClient = join(
   realpathSync(join(store, 'node_modules/@qdrant/js-client-rest')),
   'dist/esm/index.js',
