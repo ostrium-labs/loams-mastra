@@ -3,54 +3,72 @@
     "test": "ElasticSearchVector > Basic Vector Operations > Index Lifecycle > should create a new index",
     "reason": "GET /_cat/indices has no route (listIndexes); MA1 Task 24",
     "issue": "https://github.com/ostrium-labs/loams/issues/901",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/937"
   },
   {
     "test": "ElasticSearchVector > Basic Vector Operations > Index Lifecycle > should list all indexes",
     "reason": "GET /_cat/indices has no route (listIndexes); MA1 Task 24",
     "issue": "https://github.com/ostrium-labs/loams/issues/901",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/937"
   },
   {
     "test": "ElasticSearchVector > Basic Vector Operations > Index Lifecycle > should delete an existing index",
     "reason": "GET /_cat/indices has no route (listIndexes); MA1 Task 24",
     "issue": "https://github.com/ostrium-labs/loams/issues/901",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/937"
   },
   {
     "test": "ElasticSearchVector > Basic Vector Operations > Metric Variations > cosine metric > should create index with cosine metric",
     "reason": "GET /_cat/indices has no route (listIndexes); MA1 Task 24",
     "issue": "https://github.com/ostrium-labs/loams/issues/901",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/937"
   },
   {
     "test": "ElasticSearchVector > Basic Vector Operations > Metric Variations > euclidean metric > should create index with euclidean metric",
     "reason": "GET /_cat/indices has no route (listIndexes); MA1 Task 24",
     "issue": "https://github.com/ostrium-labs/loams/issues/901",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/937"
   },
   {
     "test": "ElasticSearchVector > Basic Vector Operations > Metric Variations > dotproduct metric > should create index with dotproduct metric",
     "reason": "GET /_cat/indices has no route (listIndexes); MA1 Task 24",
     "issue": "https://github.com/ostrium-labs/loams/issues/901",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/937"
   },
   {
     "test": "ElasticSearchVector > Advanced Vector Operations > updateVector() with filter > should update multiple vectors matching a filter",
     "reason": "_update_by_query refuses an object-valued params assignment",
     "issue": "https://github.com/ostrium-labs/loams/issues/903",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/938"
   },
   {
     "test": "ElasticSearchVector > Advanced Vector Operations > updateVector() with filter > should update vectors with complex filter",
     "reason": "_update_by_query refuses an object-valued params assignment",
     "issue": "https://github.com/ostrium-labs/loams/issues/903",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/938"
   },
   {
     "test": "ElasticSearchVector > Advanced Vector Operations > updateVector() with filter > should update vectors when no matches exist",
     "reason": "_update_by_query refuses an object-valued params assignment",
     "issue": "https://github.com/ostrium-labs/loams/issues/903",
-    "since": "2026-10-20"
+    "since": "2026-10-20",
+    "fixedAfter": "0.1.0",
+    "fixedBy": "https://github.com/ostrium-labs/loams/pull/938"
   }
 ]
