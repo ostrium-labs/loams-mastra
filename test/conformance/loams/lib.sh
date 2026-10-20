@@ -7,7 +7,6 @@ mkdir -p "$HARNESS_DIR"
 pins_get() { # pins_get <js expression on the pins object>
   node -e "const p=require(process.argv[1]); const v=($1); if (v===undefined) process.exit(3); console.log(v)" "$conformance/pins.json"
 }
-LOAMS_VERSION="${LOAMS_VERSION:-$(pins_get 'p.loams.version')}"
 QDRANT_LISTEN="${LOAMS_QDRANT_LISTEN:-127.0.0.1:6333}"
 ES_LISTEN="${LOAMS_ES_LISTEN:-127.0.0.1:9200}"
 DURABLE_LISTEN="${LOAMS_DURABLE_LISTEN:-127.0.0.1:8001}"

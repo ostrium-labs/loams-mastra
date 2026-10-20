@@ -4,6 +4,7 @@
 #   LOAMS_RELEASE_DIR  use already-downloaded files instead of downloading
 set -euo pipefail
 source "$(dirname "$0")/lib.sh"
+LOAMS_VERSION="${LOAMS_VERSION:-$(pins_get 'p.loams.version')}"
 
 deb="loams_${LOAMS_VERSION}_amd64.deb"
 tarball="loams-compose-${LOAMS_VERSION}.tar.gz"
