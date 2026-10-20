@@ -1,0 +1,36 @@
+# loams-starter
+
+> A Mastra (TypeScript agent framework) project whose storage, memory and vectors live in
+> Loams Postgres, a self-hosted Postgres with pgvector from the Loams data platform. It uses
+> Mastra's own @mastra/pg package, unchanged.
+
+## Where Loams runs
+
+- Loams is self-hosted. It runs on the developer's machine (loopback, 127.0.0.1) or on a server
+  reached over a tailnet (Tailscale or Headscale). Never point this project at a public
+  endpoint, and never expose Loams to the internet.
+- Local Loams Postgres: the release's loams-compose-<version>.tar.gz, directory
+  loams-postgres-dev, `docker compose up -d`; it listens on 127.0.0.1:55433.
+- Optional: `loams dev` serves a Qdrant-compatible vector API on 127.0.0.1:6333 (use
+  @mastra/qdrant with apiKey = an lk_ key and the header Loams-Namespace).
+
+## Environment
+
+- DATABASE_URL: the Loams Postgres connection string (required).
+- MODEL: a Mastra model-router id for the agent, for example openai/gpt-5-mini.
+- Provider keys (for example OPENAI_API_KEY) for real models.
+- LOAMS_API_KEY, LOAMS_NAMESPACE, LOAMS_QDRANT_URL: only with the Qdrant gateway.
+
+## Code
+
+- src/mastra/storage.ts: PostgresStore, PgVector, the model and the embedder.
+- src/mastra/agents/assistant.ts: the agent with Memory (lastMessages, semanticRecall).
+- src/mastra/tools/search-docs.ts: RAG over PgVector.
+- src/mastra/workflows/ingest-docs.ts: chunk, embed, upsert.
+
+## Docs
+
+- Loams × Mastra: https://github.com/ostrium-labs/loams-mastra
+- Compatibility matrix: https://github.com/ostrium-labs/loams-mastra/blob/main/COMPATIBILITY.md
+- Loams: https://github.com/ostrium-labs/loams
+- Mastra: https://mastra.ai/docs

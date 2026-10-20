@@ -1,0 +1,26 @@
+{
+  "name": "loams-starter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A Mastra starter on Loams: an agent with memory on Loams Postgres, a RAG tool over PgVector, and a two-step workflow.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "mastra dev",
+    "build": "mastra build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test:e2e": "vitest run"
+  },
+  "dependencies": {
+    "@mastra/core": "1.78.0",
+    "@mastra/memory": "1.38.0",
+    "@mastra/pg": "1.31.2",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "mastra": "1.34.2",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

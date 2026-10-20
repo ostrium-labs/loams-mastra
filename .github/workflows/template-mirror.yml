@@ -1,0 +1,42 @@
+name: Template mirror
+
+# Pushes templates/loams-starter to ostrium-labs/loams-mastra-template, the repository
+# `create-mastra --template` uses (MA-R0.5). Needs that repository (a GitHub template
+# repository) and a deploy key for it in the secret TEMPLATE_DEPLOY_KEY: both are owner
+# actions. Without the secret the job does nothing.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mirror:
+    name: Mirror the starter template
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Push to ostrium-labs/loams-mastra-template
+        env:
+          DEPLOY_KEY: ${{ secrets.TEMPLATE_DEPLOY_KEY }}
+        run: |
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "::notice::TEMPLATE_DEPLOY_KEY is not set; nothing mirrored"
+            exit 0
+          fi
+          install -m 600 /dev/null "$RUNNER_TEMP/key"
+          printf '%s\n' "$DEPLOY_KEY" > "$RUNNER_TEMP/key"
+          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          src="$GITHUB_WORKSPACE/templates/loams-starter"
+          git clone --depth 1 git@github.com:ostrium-labs/loams-mastra-template.git "$RUNNER_TEMP/mirror"
+          cd "$RUNNER_TEMP/mirror"
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -r "$src"/. .
+          git add -A
+          if git diff --cached --quiet; then echo "up to date"; exit 0; fi
+          git -c user.name='loams-mastra[bot]' -c user.email='support@ostriumlabs.org' \
+            commit -s -m "Mirror templates/loams-starter from ostrium-labs/loams-mastra@${GITHUB_SHA}"
+          git push origin HEAD
