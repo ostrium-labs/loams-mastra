@@ -287,20 +287,33 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
     }
   }
 
-  /**
-   * Concurrent branches finish in network order, so their suspensions would be
-   * recorded in a different order on each run. Keep `suspendedPaths` in
-   * execution-path order (graph order), which is what the default engine produces.
-   */
+  /** The run's suspended paths, kept to order the result's `suspended` list. */
+  #suspendedPaths: Record<string, number[]> = {};
+
   override applyMutableContext(
     executionContext: ExecutionContext,
     mutableContext: Parameters<DefaultExecutionEngine['applyMutableContext']>[1],
   ): void {
     super.applyMutableContext(executionContext, mutableContext);
-    const paths = executionContext.suspendedPaths;
-    const sorted = Object.entries(paths).sort(([, a], [, b]) => comparePaths(a, b));
-    for (const key of Object.keys(paths)) delete paths[key];
-    for (const [key, value] of sorted) paths[key] = value;
+    this.#suspendedPaths = executionContext.suspendedPaths;
+  }
+
+  /**
+   * Concurrent branches finish in network order, and core lists suspended steps in
+   * the order their results arrived. Order them by execution path (graph order)
+   * instead, which is what the default engine, finishing them in-process, produces.
+   */
+  protected override async fmtReturnValue<TOutput>(
+    ...args: Parameters<DefaultExecutionEngine['fmtReturnValue']>
+  ): Promise<TOutput> {
+    const result = (await super.fmtReturnValue(...args)) as { suspended?: string[][] };
+    const paths = this.#suspendedPaths;
+    if (Array.isArray(result?.suspended) && result.suspended.length > 1) {
+      result.suspended = [...result.suspended].sort((a, b) =>
+        comparePaths(paths[a[0] ?? ''], paths[b[0] ?? '']),
+      );
+    }
+    return result as TOutput;
   }
 
   // Step executions: one child context each, so that concurrent branches
