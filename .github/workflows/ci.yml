@@ -48,12 +48,37 @@ jobs:
           tar xzf actionlint.tgz actionlint
       - run: ./actionlint -color
 
+  harness:
+    name: Loams harness
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: start_loams_refuses_bad_checksum
+        run: test/conformance/loams/test.sh
+      - name: Install the pinned Loams release
+        run: test/conformance/loams/install-loams.sh
+      - name: Start loams dev with API keys
+        run: test/conformance/loams/start-loams.sh --auth
+      - name: Start Loams Postgres
+        run: test/conformance/loams/start-postgres.sh
+      - name: The key works and the namespace header is honoured
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' -H "api-key: $LOAMS_API_KEY" -H 'Loams-Namespace: harness' "$LOAMS_QDRANT_URL/collections")
+          test "$code" = 200
+          code=$(curl -s -o /dev/null -w '%{http_code}' "$LOAMS_QDRANT_URL/collections")
+          test "$code" = 401
+      - name: Stop
+        if: always()
+        run: test/conformance/loams/stop.sh ${{ job.status != 'success' && '--logs' || '' }}
+
   required:
     name: CI required
     if: always()
     needs:
       - checks
       - actionlint
+      - harness
     runs-on: ubuntu-24.04
     steps:
       - name: Require all CI jobs to pass
