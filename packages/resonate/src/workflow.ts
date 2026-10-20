@@ -51,4 +51,13 @@ export class ResonateWorkflow<
     this.resonate = resonate;
     this.config = config;
   }
+
+  /**
+   * Refuses to create runs until the Resonate engine is wired (Task 15): the
+   * inherited implementation would run on Mastra's default engine, without
+   * Resonate's durability.
+   */
+  override async createRun(): Promise<never> {
+    throw new Error('@loams/mastra-resonate: not implemented yet (TODO(Task 15))');
+  }
 }
