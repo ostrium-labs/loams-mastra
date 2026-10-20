@@ -1,0 +1,22 @@
+{
+  "name": "@loams-internal/resonate-tests",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Integration tests of @loams/mastra-resonate against a real Resonate server: upstream Resonate or Loams Durable",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "pnpm --filter @loams/mastra-resonate build && tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@loams/mastra-resonate": "workspace:*",
+    "@mastra/core": "1.78.0",
+    "@mastra/libsql": "1.26.2",
+    "@resonatehq/sdk": "0.11.5",
+    "@types/node": "24.19.2",
+    "vitest": "4.1.11",
+    "zod": "4.6.5",
+    "typescript": "5.9.3"
+  }
+}

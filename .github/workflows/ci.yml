@@ -72,6 +72,44 @@ jobs:
         if: always()
         run: test/conformance/loams/stop.sh ${{ job.status != 'success' && '--logs' || '' }}
 
+  resonate:
+    # The Resonate engine against a real Resonate server: the upstream server
+    # (pinned in packages/resonate/docker-compose.yaml) and Loams Durable from the
+    # pinned Loams 0.1.0 image (its .deb lacks Durable: ostrium-labs/loams#925).
+    name: Resonate (${{ matrix.backend }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        backend: [upstream, loams]
+    env:
+      RESONATE_BACKEND: ${{ matrix.backend }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Start the upstream Resonate server
+        if: matrix.backend == 'upstream'
+        run: test/resonate/start-resonate.sh
+      - name: Start Loams Durable
+        if: matrix.backend == 'loams'
+        run: test/resonate/start-loams-durable.sh
+      - run: pnpm --filter @loams/mastra-resonate build
+      - name: Engine tests
+        run: pnpm --filter @loams/mastra-resonate test
+      - name: Backend tests
+        run: pnpm --filter @loams-internal/resonate-tests test
+      - name: Server logs
+        if: failure()
+        run: |
+          docker compose -f packages/resonate/docker-compose.yaml logs || true
+          docker logs mastra-resonate-loams || true
+
   required:
     name: CI required
     if: always()
@@ -79,6 +117,7 @@ jobs:
       - checks
       - actionlint
       - harness
+      - resonate
     runs-on: ubuntu-24.04
     steps:
       - name: Require all CI jobs to pass
