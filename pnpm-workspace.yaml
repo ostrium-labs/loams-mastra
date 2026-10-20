@@ -14,5 +14,5 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@loams/*'
 
-# Dependency lifecycle scripts are blocked unless listed here.
-onlyBuiltDependencies: []
+# Dependency lifecycle scripts are blocked unless allowed here (pnpm 11, MA-R0.6).
+allowBuilds: {}
