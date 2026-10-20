@@ -1,6 +1,6 @@
 {
   "name": "@loams/mastra-resonate",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": false,
   "description": "Run Mastra workflows durably on any Resonate server (Loams Durable included)",
   "license": "Apache-2.0",
