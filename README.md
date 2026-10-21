@@ -62,5 +62,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 of Kepler Software, Inc.; this project is not affiliated with or endorsed by Mastra.
 
 - Questions: [Loams Discord](https://discord.gg/eK6NanHQq)
-- Support: support@ostriumlabs.org
+- Contact: support@ostriumlabs.org. Built by [Ostrium Labs](https://ostriumlabs.org), a research lab building open-source Loams.
 - Security: [SECURITY.md](SECURITY.md) (security@ostriumlabs.org)
