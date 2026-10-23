@@ -34,6 +34,11 @@ type ExecuteWorkflowStepParams = Parameters<DefaultExecutionEngine['executeWorkf
  */
 const scope = new AsyncLocalStorage<{ ctx: Context }>();
 const retryCountStorage = new AsyncLocalStorage<number>();
+/**
+ * Whether the step being executed was active when its run was restarted: core
+ * passes a nested workflow the same flag (`restart: !!restart?.activeStepsPath?.[step.id]`).
+ */
+const restartedStep = new AsyncLocalStorage<boolean>();
 
 /** Raised when a replay asks for a different operation than the one recorded at that position. */
 export class NondeterminismError extends MastraNonRetryableError {
@@ -321,7 +326,9 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
 
   override executeStep(params: ExecuteStepParams): Promise<StepExecutionResult> {
     return this.#inChild(entryLabel('step', params.step.id, params.executionContext), () =>
-      super.executeStep(params),
+      restartedStep.run(!!params.restart?.activeStepsPath?.[params.step.id], () =>
+        super.executeStep(params),
+      ),
     );
   }
 
@@ -409,12 +416,17 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
         ? `${executionContext.runId}-foreach-${executionContext.foreachIndex}`
         : executionContext.runId;
     const isResume = !!resume?.steps?.length && resume.steps[0] === step.id;
+    // A nested run that was active when its parent stopped restarts from its own snapshot.
+    const isRestart = !isResume && restartedStep.getStore() === true;
     // Inside a foreach every iteration sees the aggregate step result, whose
     // __workflow_meta names the first suspended iteration's run; use this iteration's.
     const runId: string =
       isResume && executionContext.foreachIndex === undefined
         ? ((stepResults[step.id] as any)?.suspendPayload?.__workflow_meta?.runId ?? derivedRunId)
-        : derivedRunId;
+        : isRestart && executionContext.foreachIndex === undefined
+          ? // A restarted nested run is found under the run id its snapshot saved.
+            ((stepResults[step.id] as any)?.metadata?.nestedRunId ?? derivedRunId)
+          : derivedRunId;
 
     let nestedResume: InvocationPayload['resume'];
     if (isResume) {
@@ -440,7 +452,7 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
     }
 
     const payload: InvocationPayload = {
-      kind: isResume ? 'resume' : 'start',
+      kind: isResume ? 'resume' : isRestart ? 'restart' : 'start',
       role: 'pass',
       workflowId: step.id,
       runId,
@@ -452,6 +464,17 @@ export class ResonateExecutionEngine extends DefaultExecutionEngine {
       perStep,
       actor,
       ...(nestedResume ? { resume: nestedResume } : {}),
+      // As core's step handler: a step that was resuming when the run stopped keeps its resume data.
+      ...(isRestart
+        ? {
+            restart: {
+              resumePayload:
+                (stepResults[step.id] as any)?.status === 'running'
+                  ? (stepResults[step.id] as any)?.resumePayload
+                  : undefined,
+            },
+          }
+        : {}),
       nested: {
         compact: true,
         tracing: executionContext.tracingIds?.traceId

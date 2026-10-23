@@ -101,7 +101,11 @@ export interface ResumeRequest {
 }
 
 export interface InvocationPayload {
-  kind: 'start' | 'resume';
+  /**
+   * `restart` re-runs a run that was active when its process stopped, from its
+   * snapshot (`run.restart()`).
+   */
+  kind: 'start' | 'resume' | 'restart';
   /**
    * `root` is the run's root promise, which dispatches each pass and waits for
    * it; `pass` executes the graph. Nested workflows run as `pass` directly.
@@ -123,6 +127,11 @@ export interface InvocationPayload {
   resumeRequest?: ResumeRequest;
   /** A resume of a nested run, resolved by the parent. */
   resume?: { steps: string[]; resumePayload: unknown; resumePath?: number[] };
+  /**
+   * A restart of a nested run, set by the parent: the resume data of the nested
+   * step when the parent's process stopped while resuming it.
+   */
+  restart?: { resumePayload?: unknown };
   /** Set when a parent workflow invokes this one as a nested step. */
   nested?: { compact: boolean; tracing?: { traceId: string; parentSpanId?: string } };
 }

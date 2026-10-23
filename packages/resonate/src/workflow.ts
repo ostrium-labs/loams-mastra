@@ -5,6 +5,7 @@ import type { Mastra } from '@mastra/core/mastra';
 import { EntityType, SpanType } from '@mastra/core/observability';
 import type { WorkflowRuns } from '@mastra/core/storage';
 import type {
+  RestartExecutionParams,
   Run,
   Step,
   StepFlowEntry,
@@ -18,6 +19,7 @@ import { getEntryWorkflow, isSingleStepEntry, Workflow } from '@mastra/core/work
 import type { Context, Resonate } from '@resonatehq/sdk/async';
 import { decodeValue, encodeError, encodeValue } from './codec';
 import { currentContext, durable, ResonateExecutionEngine, withContext } from './execution-engine';
+import { isUnstartedResumeClaim, planRestart } from './restart';
 import { resolveResumeSteps, validateWithSchema } from './resume';
 import { ResonateRun } from './run';
 import type {
@@ -303,12 +305,37 @@ export class ResonateWorkflow<
     let requestContextEntries = payload.requestContext ?? {};
     let actor = payload.actor;
     let resume: any;
+    let restart: RestartExecutionParams | undefined;
+    // What this pass executes: a restart that finds a nested run suspended resumes it.
+    let invocation = payload;
 
-    if (payload.kind === 'resume') {
+    if (payload.kind === 'restart') {
+      const prepared = await durable(
+        `workflow.${this.id}.restart.prepare`,
+        this.#config.timeout,
+        () => this.#prepareRestart(payload),
+      );
+      if ('result' in prepared) {
+        // Finished already, or not restartable: returned as it is; nothing runs.
+        return payload.nested?.compact ? compact(prepared.result) : prepared.result;
+      }
+      if ('resume' in prepared) {
+        invocation = { ...payload, kind: 'resume', resume: prepared.resume };
+      } else {
+        // As in core's Run.restart(), the engine reads the input from the snapshot's
+        // step results; the callbacks and the run's span are given none.
+        restart = prepared.restart;
+        inputData = undefined;
+        initialState = prepared.restart.state ?? {};
+        requestContextEntries = prepared.requestContext;
+      }
+    }
+
+    if (invocation.kind === 'resume') {
       const prepared = await durable(
         `workflow.${this.id}.resume.prepare`,
         this.#config.timeout,
-        () => this.#prepareResume(payload),
+        () => this.#prepareResume(invocation),
       );
       if ('rejected' in prepared) {
         // The run stays suspended; the caller gets the reason.
@@ -375,6 +402,7 @@ export class ResonateWorkflow<
         requestContext,
         actor: actor as any,
         resume,
+        restart,
         perStep,
         format,
         abortController: new AbortController(),
@@ -655,6 +683,79 @@ export class ResonateWorkflow<
       input: (snapshot.context as Record<string, any>)?.input,
       requestContext,
     };
+  }
+
+  /**
+   * Turns a restart into the engine's restart parameters, from the run's
+   * snapshot, as core's `Run.restart()` does (see {@link planRestart}); the
+   * snapshot's request context is overridden by the caller's. A nested run that
+   * its parent restarts is resumed instead, with the parent's resume data, when
+   * the stop left it suspended or claimed for a resume whose step never started,
+   * as core's `Workflow.execute` decides. Runs once per pass, memoised. A restart
+   * that cannot go ahead returns a failed result instead of throwing, so the pass
+   * is not retried.
+   */
+  async #prepareRestart(
+    payload: InvocationPayload,
+  ): Promise<
+    | { restart: RestartExecutionParams; requestContext: Record<string, unknown> }
+    | { resume: NonNullable<InvocationPayload['resume']> }
+    | { result: WorkflowResult<any, any, any, any> }
+  > {
+    try {
+      const workflowsStore = await this.#mastra?.getStorage()?.getStore('workflows');
+      if (!workflowsStore)
+        throw new Error(`@loams/mastra-resonate: restarting workflow "${this.id}" needs storage`);
+      const snapshot = await workflowsStore.loadWorkflowSnapshot({
+        workflowName: this.id,
+        runId: payload.runId,
+      });
+      if (!snapshot) {
+        // A nested run with no snapshot never started. Core's nested createRun writes a
+        // pending snapshot for it, which a restart refuses as not active.
+        throw new Error(
+          payload.nested
+            ? 'This workflow run was not active'
+            : `Snapshot not found for run ${payload.runId}`,
+        );
+      }
+
+      if (payload.nested) {
+        let status = snapshot.status;
+        if (isUnstartedResumeClaim(snapshot)) {
+          // Compare-and-set, as core does, so that a concurrent claim is not re-armed.
+          const released = await workflowsStore.updateWorkflowState({
+            workflowName: this.id,
+            runId: payload.runId,
+            opts: { status: 'suspended', expectedStatus: status },
+          });
+          if (released) status = 'suspended';
+        }
+        if (status === 'suspended') {
+          return {
+            resume: {
+              steps: resolveResumeSteps({ ...snapshot, status }, {}),
+              resumePayload: payload.restart?.resumePayload,
+            },
+          };
+        }
+      }
+
+      const plan = planRestart(snapshot, this.executionGraph, payload.runId);
+      if ('result' in plan) return plan;
+      return {
+        restart: plan.restart,
+        requestContext: { ...(snapshot.requestContext ?? {}), ...payload.requestContext },
+      };
+    } catch (e) {
+      return {
+        result: {
+          status: 'failed',
+          steps: {},
+          error: getErrorFromUnknown(e, { serializeStack: false }),
+        } as unknown as WorkflowResult<any, any, any, any>,
+      };
+    }
   }
 }
 

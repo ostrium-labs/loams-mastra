@@ -1,4 +1,4 @@
-// Vendored from mastra-ai/mastra@6a465f9d1da730e179c44bfb4ef3e6ec398ba81f:workflows/inngest/src/run.ts (Apache-2.0). Changes: start dispatches a Resonate root promise and waits on its first pass instead of sending an Inngest event and polling storage; cancel cancels the durable promise; watch and stream are inherited from core's Run through the Mastra PubSub; resume, time travel and restart are not supported yet.
+// Vendored from mastra-ai/mastra@6a465f9d1da730e179c44bfb4ef3e6ec398ba81f:workflows/inngest/src/run.ts (Apache-2.0). Changes: start dispatches a Resonate root promise and waits on its first pass instead of sending an Inngest event and polling storage; cancel cancels the durable promise; resume settles a durable promise and restart dispatches a new root that replays the snapshot; watch and stream are inherited from core's Run through the Mastra PubSub; time travel is not supported yet.
 import { ErrorCategory, ErrorDomain, getErrorFromUnknown, MastraError } from '@mastra/core/error';
 import type { Mastra } from '@mastra/core/mastra';
 import { MASTRA_AUTH_TOKEN_KEY, RequestContext } from '@mastra/core/request-context';
@@ -7,6 +7,7 @@ import { hydrateSerializedStepErrors, Run, waitForSuspendedSnapshot } from '@mas
 import { Codec } from '@resonatehq/sdk';
 import type { Resonate, ResonateHandle } from '@resonatehq/sdk/async';
 import { decodeError, decodeValue, encodeValue } from './codec';
+import { planRestart } from './restart';
 import { resolveResumeSteps } from './resume';
 import type {
   DurablePromiseState,
@@ -435,8 +436,107 @@ export class ResonateRun<
     throw notSupported('Time travel');
   }
 
-  protected override async _restart(): Promise<never> {
-    throw notSupported('Restart');
+  /**
+   * Restarts a run from its snapshot, as core's `Run._restart` does (see
+   * {@link planRestart}): a run that already finished is returned as it
+   * finished, and any other run that was not active is refused with core's
+   * error. A restart is a new root promise that replays the graph from the
+   * snapshot, so the steps that were active run again and the finished ones are
+   * kept.
+   *
+   * The root promise usually does not exist: the snapshot was written by a
+   * process that stopped before it dispatched the run, or by tooling that only
+   * wrote a snapshot. A root the server still holds is refused instead — the
+   * durable runtime either owns the run and recovers it itself, or has already
+   * settled it, and a promise id is never reused, so restarting there would need
+   * a run identity this run does not have.
+   */
+  protected override async _restart(
+    args: {
+      requestContext?: RequestContext<TRequestContext>;
+      tracingOptions?: unknown;
+      outputOptions?: { includeState?: boolean; includeResumeLabels?: boolean };
+      actor?: unknown;
+    } = {},
+  ): Promise<WorkflowResult<TState, TInput, TOutput, any>> {
+    const workflowsStore = await this.#mastra?.getStorage()?.getStore('workflows');
+    if (!workflowsStore) {
+      throw new Error(`Workflow storage is required to restart run ${this.runId}`);
+    }
+    const snapshot = await workflowsStore.loadWorkflowSnapshot({
+      workflowName: this.workflowId,
+      runId: this.runId,
+    });
+    if (!snapshot) {
+      throw new Error(`Snapshot not found for run ${this.runId}`);
+    }
+
+    // Core's decision, made before anything is dispatched: a finished run is
+    // returned as it finished (mastra-ai/mastra#20225), and a run that was not
+    // active is refused here rather than by a durable pass, so the caller sees
+    // the error instead of a failed pass.
+    const plan = planRestart(snapshot, this.executionGraph, this.runId);
+
+    if ('result' in plan) {
+      const result = plan.result as WorkflowResult<TState, TInput, TOutput, any>;
+      hydrateFailedResult(result);
+      if (!args.outputOptions?.includeState) {
+        delete (result as { state?: unknown }).state;
+      }
+      this.workflowRunStatus = result.status;
+      this.cleanup?.();
+      return result;
+    }
+
+    const rootState = await this.#stateOf(this.rootId);
+    if (rootState !== undefined) {
+      throw new MastraError({
+        id: 'RESONATE_ENGINE_RESTART_ACTIVE_ROOT',
+        domain: 'MASTRA_WORKFLOW',
+        category: 'USER',
+        text:
+          `Run ${this.runId} still has a ${rootState} root promise on the Resonate server; ` +
+          'the durable execution owns the run, so it cannot be restarted under the same id',
+        details: { workflowId: this.workflowId, runId: this.runId },
+      } as any);
+    }
+
+    const payload: InvocationPayload = {
+      kind: 'restart',
+      role: 'root',
+      workflowId: this.workflowId,
+      runId: this.runId,
+      resourceId: this.resourceId,
+      // The pass merges these over the snapshot's request context, as core does.
+      requestContext: serializeRequestContext(args.requestContext as RequestContext | undefined),
+      outputOptions: args.outputOptions,
+      tracingOptions: args.tracingOptions,
+      actor: args.actor,
+    };
+
+    const root = await this.#resonate.run(
+      this.rootId,
+      this.workflowId,
+      encodeValue(payload),
+      this.#resonate.options({ timeout: this.#config.timeout }),
+    );
+    this.workflowRunStatus = 'running';
+
+    const result = (await this.#awaitPass(root, firstPassId(this.rootId))) as WorkflowResult<
+      TState,
+      TInput,
+      TOutput,
+      any
+    >;
+    hydrateFailedResult(result);
+    if (!args.outputOptions?.includeState) {
+      delete (result as { state?: unknown }).state;
+    }
+    this.workflowRunStatus = result.status;
+    if (result.status !== 'suspended') {
+      this.cleanup?.();
+    }
+    return result;
   }
 }
 

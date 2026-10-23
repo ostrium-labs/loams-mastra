@@ -155,7 +155,9 @@ Optional. The worker group that runs workflow executions. It must match the clie
 - Step inputs and outputs must be JSON-serializable. Functions, symbols, bigints, and cyclic values are rejected.
 - A replay must request durable operations in the same order. Don't change a workflow's graph while runs of it are in flight.
 - `run.resume()` reads the run's snapshot from the storage of the `Mastra` instance the workflow is registered with, as with the default engine. A workflow you build again, for example after a restart, must be registered with `Mastra` before it resumes a run.
-- Time travel and `restart()` aren't supported yet.
+- Time travel isn't supported yet. `restart()` replays a run from its snapshot when its durable
+  execution is not on the server; a finished run is returned as it finished, and a run the server
+  is still running or recovering is refused.
 
 ## Related
 
