@@ -62,4 +62,7 @@ dir_of() { ls -d "$root"/test/conformance/upstream/mastra-"$1"@*/stores/"$1"; }
   echo "COMPAT_PG_DIR=$(dir_of pg)"
   echo "COMPAT_ES_DIR=$(dir_of elasticsearch)"
   echo "MASTRA_VERSION=${v[core]}"
+  # Releases of the latest and alpha tags are younger than minimumReleaseAge; pnpm checks
+  # the lockfile again on every `pnpm run`, not only on install (2026-10-23).
+  echo "pnpm_config_minimum_release_age=0"
 } | tee -a "${GITHUB_ENV:-/dev/null}"

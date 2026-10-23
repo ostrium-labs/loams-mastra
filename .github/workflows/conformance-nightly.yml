@@ -43,7 +43,7 @@ jobs:
           if [ "${{ matrix.mastra }}" = pinned ]; then
             pnpm install --frozen-lockfile
           elif [ "${{ matrix.mastra }}" = alpha ]; then
-            pnpm install --no-frozen-lockfile --config.minimum-release-age=0
+            pnpm install --no-frozen-lockfile
           else
             pnpm install --no-frozen-lockfile
           fi
