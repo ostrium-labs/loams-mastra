@@ -304,6 +304,12 @@ export class MastraAcpAgent implements acp.Agent {
             ],
           });
           break;
+        case 'error': {
+          // A failed model call or step ends the prompt with an error, never a
+          // quiet `end_turn`.
+          const { error } = chunk.payload;
+          throw error instanceof Error ? error : new Error(stringify(error));
+        }
         case 'finish':
           finishReason = chunk.payload.stepResult?.reason ?? finishReason;
           break;

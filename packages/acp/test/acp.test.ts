@@ -295,6 +295,17 @@ describe('@loams/mastra-acp', () => {
     expect(ran).toEqual([]);
   });
 
+  it('a failed model call fails the prompt', async () => {
+    const model = new MastraLanguageModelV2Mock({
+      doStream: async () => {
+        throw new Error('provider is down');
+      },
+    });
+    const agent = new Agent({ id: 'bot', name: 'Bot', instructions: 'x', model });
+    const h = await connect(agent);
+    await expect(prompt(h, 'hi')).rejects.toThrow();
+  });
+
   it('an unknown session is an error', async () => {
     const agent = new Agent({
       id: 'bot',
