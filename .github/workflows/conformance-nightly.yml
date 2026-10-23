@@ -62,16 +62,30 @@ jobs:
         continue-on-error: true
         working-directory: test/conformance
         run: pnpm run pinned:pg && pnpm run checks:postgres
-      - name: Elasticsearch (observed)
-        continue-on-error: true
-        working-directory: test/conformance
-        run: ELASTICSEARCH_URL="$LOAMS_ES_URL" pnpm run pinned:es
       - name: Examples
         id: examples
         continue-on-error: true
         run: |
           (cd examples/quickstart-postgres && DATABASE_URL="$DB_URL" pnpm test:e2e)
           (cd examples/quickstart-qdrant && DATABASE_URL="$DB_URL" LOAMS_NAMESPACE=default pnpm test:e2e)
+      # The Qdrant and Elasticsearch suites without auth run against a loams dev without
+      # API keys, as in conformance.yml: with keys required, Elasticsearch answers 401 to
+      # all but the few tests that expect it (11 of 50 passed on 2026-10-22).
+      - name: Restart loams dev without auth
+        run: |
+          kill "$(cat "$RUNNER_TEMP/loams.pid")" || true
+          sleep 2
+          unset LOAMS_API_KEY
+          test/conformance/loams/start-loams.sh
+      - name: Qdrant
+        id: qdrant-plain
+        continue-on-error: true
+        working-directory: test/conformance
+        run: unset LOAMS_API_KEY; pnpm run pinned:qdrant
+      - name: Elasticsearch (observed)
+        continue-on-error: true
+        working-directory: test/conformance
+        run: unset LOAMS_API_KEY; ELASTICSEARCH_URL="$LOAMS_ES_URL" pnpm run pinned:es
       - name: no_secret_in_artifacts
         if: always()
         run: node scripts/repo-checks.mjs --artifacts test/conformance/results
@@ -82,7 +96,7 @@ jobs:
           path: test/conformance/results/
           if-no-files-found: ignore
       - name: Open or update the compatibility issue
-        if: steps.qdrant.outcome == 'failure' || steps.pg.outcome == 'failure' || steps.examples.outcome == 'failure'
+        if: steps.qdrant.outcome == 'failure' || steps.qdrant-plain.outcome == 'failure' || steps.pg.outcome == 'failure' || steps.examples.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -96,29 +110,67 @@ jobs:
   matrix:
     name: Update COMPATIBILITY.md
     needs: cell
-    if: always() && github.event_name == 'schedule'
+    if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    # The environment can be limited to main (Settings > Environments); the App secrets may
+    # be repository secrets or this environment's.
+    environment: compat-matrix
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
+    env:
+      MATRIX_APP_ID: ${{ secrets.MATRIX_APP_ID }}
+      MATRIX_APP_PRIVATE_KEY: ${{ secrets.MATRIX_APP_PRIVATE_KEY }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # COMPATIBILITY.md is the pinned Mastra's matrix. The latest and alpha cells write the
+      # same result file names, so merging all of them overwrote the pinned results.
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          pattern: nightly-results-*
+          name: nightly-results-pinned
           path: test/conformance/results
-          merge-multiple: true
-      - name: Render and propose
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Render
+        id: render
         run: |
           node scripts/gen-compat.mjs test/conformance/results COMPATIBILITY.md
-          if git diff --quiet -- COMPATIBILITY.md; then echo "unchanged"; exit 0; fi
-          branch="compat/$(date -u +%Y-%m-%d)"
+          if git diff --quiet -- COMPATIBILITY.md; then
+            echo "COMPATIBILITY.md is unchanged"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      # A PR opened with GITHUB_TOKEN never runs the required checks (CI, Conformance, DCO),
+      # so it could not be merged. An installation token of the matrix GitHub App can.
+      - name: No GitHub App configured
+        if: steps.render.outputs.changed == 'true' && (env.MATRIX_APP_ID == '' || env.MATRIX_APP_PRIVATE_KEY == '')
+        run: |
+          echo "::warning::MATRIX_APP_ID or MATRIX_APP_PRIVATE_KEY is not set: not opening the compatibility matrix PR. See CONTRIBUTING or docs for the GitHub App setup."
+          git diff --stat -- COMPATIBILITY.md
+      - name: App token
+        id: app
+        if: steps.render.outputs.changed == 'true' && env.MATRIX_APP_ID != '' && env.MATRIX_APP_PRIVATE_KEY != ''
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.MATRIX_APP_ID }}
+          private-key: ${{ secrets.MATRIX_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Open the PR
+        if: steps.app.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+        run: |
+          bot="${APP_SLUG}[bot]"
+          bot_id=$(gh api "/users/${bot}" --jq .id)
+          branch="compat/$(date -u +%Y-%m-%d)-${GITHUB_RUN_ID}"
           git switch -c "$branch"
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+          # The author is the App's bot and the sign-off names the same address, which is
+          # what scripts/check-dco.sh requires.
+          git -c user.name="$bot" -c user.email="${bot_id}+${bot}@users.noreply.github.com" \
             commit -s -m "docs: the nightly compatibility matrix" -- COMPATIBILITY.md
-          git push origin "$branch"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$branch"
           gh pr create --base main --head "$branch" --title "docs: the nightly compatibility matrix" \
             --body "Generated by the nightly conformance run ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."

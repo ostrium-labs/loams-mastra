@@ -11,8 +11,21 @@ root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$root"
 
 version() { npm view "$1@$tag" version 2>/dev/null || npm view "$1@latest" version; }
+# A package whose suites are vendored needs a release tag upstream. Mastra does not tag
+# alpha releases, so fall back to the latest release for it (2026-10-22: pg 1.32.0-alpha.6
+# had no tag and the cell failed before running anything).
+tagged_version() {
+  local v; v=$(version "$1")
+  if gh api "repos/mastra-ai/mastra/git/ref/tags/$(printf '%s' "$1@$v" | sed 's/@/%40/g')" >/dev/null 2>&1; then
+    echo "$v"
+  else
+    echo "nightly-vendor: $1@$v has no release tag in mastra-ai/mastra; using $1@latest" >&2
+    npm view "$1@latest" version
+  fi
+}
 declare -A v
-for p in core pg qdrant elasticsearch memory; do v[$p]=$(version "@mastra/$p"); done
+for p in core memory; do v[$p]=$(version "@mastra/$p"); done
+for p in pg qdrant elasticsearch; do v[$p]=$(tagged_version "@mastra/$p"); done
 echo "Mastra $tag: core ${v[core]}, pg ${v[pg]}, qdrant ${v[qdrant]}, elasticsearch ${v[elasticsearch]}, memory ${v[memory]}"
 
 node -e '
@@ -24,7 +37,8 @@ p.tags = { "@mastra/pg": `@mastra/pg@${pg}`, "@mastra/qdrant": `@mastra/qdrant@$
 fs.writeFileSync(f, JSON.stringify(p, null, 2) + "\n");
 ' "${v[core]}" "${v[pg]}" "${v[qdrant]}" "${v[elasticsearch]}" "${v[memory]}"
 
-rm -rf test/conformance/upstream/mastra-*
+# Only the store suites are replaced; mastra-inngest (the Resonate engine tests) stays.
+rm -rf test/conformance/upstream/mastra-pg@* test/conformance/upstream/mastra-qdrant@* test/conformance/upstream/mastra-elasticsearch@*
 for p in pg qdrant elasticsearch; do
   node scripts/vendor-upstream.mjs --package "@mastra/$p" --tag "@mastra/$p@${v[$p]}"
 done
