@@ -1,0 +1,7 @@
+Loams for Mastra: @loams/mastra-acp
+Copyright 2026 The Loams Authors
+
+This product includes software developed by The Loams Authors. It uses the Agent
+Client Protocol TypeScript library (@agentclientprotocol/sdk, Apache-2.0) as a
+dependency; no part of it is copied here. Nothing in this package is taken from
+Mastra's ee/ directories.
