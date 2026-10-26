@@ -13,8 +13,8 @@
   "devDependencies": {
     "@loams-internal/upstream-inngest-workflow-test-utils": "workspace:*",
     "@loams/mastra-resonate": "workspace:*",
-    "@mastra/core": "1.78.0",
-    "@mastra/libsql": "1.26.2",
+    "@mastra/core": "1.79.0",
+    "@mastra/libsql": "1.27.0",
     "@resonatehq/sdk": "0.11.5",
     "@types/node": "24.19.2",
     "typescript": "7.0.2",

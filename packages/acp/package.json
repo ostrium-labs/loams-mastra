@@ -33,7 +33,7 @@
     "@agentclientprotocol/sdk": "1.8.0"
   },
   "devDependencies": {
-    "@mastra/core": "1.78.0",
+    "@mastra/core": "1.79.0",
     "@types/node": "24.19.2",
     "tsdown": "0.22.14",
     "typescript": "7.0.2",
